@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.config.RuntimeSettings;
+import pro.gravit.launcher.events.request.AuthRequestEvent;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +19,7 @@ public final class Accounts {
         accountsConfig.load();
     }
 
-    public static void authed() {
+    public static void authed(@NonNull final AuthRequestEvent authRequestEvent) {
         @NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
         @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
         @NonNull final List<AccountsConfig.Account> accountList = accountsConfig.getAccounts();
@@ -33,6 +34,7 @@ public final class Accounts {
             account.setOauthRefreshToken(runtimeSettings.oauthRefreshToken);
             account.setOauthExpire(runtimeSettings.oauthExpire);
             account.setLogin(Reference.getLoginOfRefreshToken(runtimeSettings.oauthRefreshToken));
+            account.setServerId(Reference.getServerIdForUUID(authRequestEvent.playerProfile.uuid));
         } else {
             @NonNull final AccountsConfig.Account account = new AccountsConfig.Account();
 
@@ -40,6 +42,7 @@ public final class Accounts {
             account.setOauthRefreshToken(runtimeSettings.oauthRefreshToken);
             account.setOauthExpire(runtimeSettings.oauthExpire);
             account.setLogin(Reference.getLoginOfRefreshToken(runtimeSettings.oauthRefreshToken));
+            account.setServerId(Reference.getServerIdForUUID(authRequestEvent.playerProfile.uuid));
 
             accountList.add(account);
         }

@@ -38,7 +38,7 @@ public class GuiModuleConfig {
         config.lazy = false;
         config.javaList = new HashMap<>();
         config.disableOfflineMode = false;
-        config.autoAuth = false;
+        config.autoAuth = true;
         config.locale = "RUSSIAN";
         config.downloadThreads = 4;
         return config;

@@ -43,6 +43,8 @@ public final class FastLoginScene extends AbstractScene {
 
     @Override
     public void reset() {
+        this.selectedAccount = null;
+        this.accountsScroll.updateGrid();
     }
 
     @SneakyThrows
@@ -56,13 +58,23 @@ public final class FastLoginScene extends AbstractScene {
         runtimeSettings.oauthRefreshToken = this.selectedAccount.getOauthRefreshToken();
         runtimeSettings.oauthExpire = this.selectedAccount.getOauthExpire();
 
-        this.switchToLogin();
+        super.switchScene(JavaFXApplication.getInstance().gui.loginScene);
+        super.currentStage.stage.centerOnScreen();
 
         JavaFXApplication.getInstance().gui.loginScene.tryOAuthLogin();
     }
 
     @SneakyThrows
     public void switchToLogin() {
+        @NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
+        @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
+
+        runtimeSettings.lastAuth = null;
+        runtimeSettings.oauthAccessToken = null;
+        runtimeSettings.oauthRefreshToken = null;
+        runtimeSettings.oauthExpire = 0;
+
         super.switchScene(JavaFXApplication.getInstance().gui.loginScene);
+        super.currentStage.stage.centerOnScreen();
     }
 }

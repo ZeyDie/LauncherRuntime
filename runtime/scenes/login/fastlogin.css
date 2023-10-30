@@ -38,6 +38,7 @@
     -fx-text-alignment: right;
 }
 
+.serverImage,
 .exitButton {
     -fx-background-color: transparent;
 }

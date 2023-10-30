@@ -26,26 +26,6 @@
             </image>
         </ImageView>
 
-        <!-- Вертикальная полоса -->
-        <Pane id="leftPane" layoutX="261.0" layoutY="326.0" prefHeight="25.0" prefWidth="330.0" styleClass="vline">
-            <children>
-
-                <!-- Чекбоксы -->
-                <CheckBox id="autoenter" layoutX="-1.0" layoutY="5.0" prefHeight="20.0" prefWidth="172.0"
-                          wrapText="true">
-                    <padding>
-                        <Insets left="5.0"/>
-                    </padding>
-                </CheckBox>
-                <CheckBox id="savePassword" layoutX="224.0" layoutY="5.0" prefHeight="20.0" prefWidth="116.0"
-                          wrapText="true">
-                    <padding>
-                        <Insets left="5.0"/>
-                    </padding>
-                </CheckBox>
-            </children>
-        </Pane>
-
         <!-- Блок атворизации -->
         <Pane id="authButtonBlock" fx:id="auth" layoutX="260.0" layoutY="368.0" maxHeight="45.0" maxWidth="330.0"
               minHeight="45.0" minWidth="330.0" prefHeight="45.0" prefWidth="330.0">

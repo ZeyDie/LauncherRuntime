@@ -1,6 +1,7 @@
 package pro.gravit.launcher.client.gui.scenes.login;
 
 import com.zeydie.launcher.Accounts;
+import com.zeydie.launcher.Reference;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -56,8 +57,6 @@ public class LoginScene extends AbstractScene {
     public Map<Class<? extends GetAvailabilityAuthRequestEvent.AuthAvailabilityDetails>, AbstractAuthMethod<? extends GetAvailabilityAuthRequestEvent.AuthAvailabilityDetails>> authMethods = new HashMap<>(8);
     public boolean isLoginStarted;
     private List<GetAvailabilityAuthRequestEvent.AuthAvailability> auth;
-    private CheckBox savePasswordCheckBox;
-    private CheckBox autoenter;
     private LoginAuthButtonComponent authButton;
     private final AuthService authService = new AuthService(application);
     private VBox authList;
@@ -77,13 +76,7 @@ public class LoginScene extends AbstractScene {
     @Override
     public void doInit() {
         authButton = new LoginAuthButtonComponent(LookupHelper.lookup(layout, "#authButtonBlock"), application, (e) -> contextHelper.runCallback(this::loginWithGui));
-        savePasswordCheckBox = LookupHelper.lookup(layout, "#leftPane", "#savePassword");
-        if (application.runtimeSettings.password != null || application.runtimeSettings.oauthAccessToken != null) {
-            LookupHelper.<CheckBox>lookup(layout, "#leftPane", "#savePassword").setSelected(true);
-        }
-        autoenter = LookupHelper.<CheckBox>lookup(layout, "#autoenter");
-        autoenter.setSelected(application.runtimeSettings.autoAuth);
-        autoenter.setOnAction((event) -> application.runtimeSettings.autoAuth = autoenter.isSelected());
+        application.runtimeSettings.autoAuth = true;
         if (application.guiModuleConfig.createAccountURL != null)
             LookupHelper.<Text>lookup(header, "#controls", "#registerPane", "#createAccount").setOnMouseClicked((e) ->
                     application.openURL(application.guiModuleConfig.createAccountURL));
@@ -345,7 +338,7 @@ public class LoginScene extends AbstractScene {
     private void onSuccessLogin(SuccessAuth successAuth) {
         AuthRequestEvent result = successAuth.requestEvent;
         application.stateService.setAuthResult(authAvailability.name, result);
-        boolean savePassword = savePasswordCheckBox.isSelected();
+        boolean savePassword = true;///savePasswordCheckBox.isSelected();
         if (savePassword) {
             application.runtimeSettings.login = successAuth.recentLogin;
             if (result.oauth == null) {
@@ -359,7 +352,7 @@ public class LoginScene extends AbstractScene {
                 application.runtimeSettings.oauthRefreshToken = result.oauth.refreshToken;
                 application.runtimeSettings.oauthExpire = Request.getTokenExpiredTime();
 
-                Accounts.authed();
+                Accounts.authed(result);
             }
             application.runtimeSettings.lastAuth = authAvailability;
         }
@@ -370,6 +363,7 @@ public class LoginScene extends AbstractScene {
             } catch (Exception ignored) {
             }
         }
+
         contextHelper.runInFxThread(() -> {
             Optional<Node> player = LookupHelper.lookupIfPossible(scene.getRoot(), "#player");
             if (player.isPresent()) {

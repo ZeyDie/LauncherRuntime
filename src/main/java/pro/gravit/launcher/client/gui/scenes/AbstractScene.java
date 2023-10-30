@@ -242,12 +242,14 @@ public abstract class AbstractScene extends AbstractVisualComponent {
                     // Exit to main menu
                     ContextHelper.runInFxThreadStatic(() -> {
                         hideOverlay(0, null);
-                        application.gui.loginScene.clearPassword();
-                        application.gui.loginScene.reset();
+                        //application.gui.loginScene.clearPassword();
+                        //application.gui.loginScene.reset();
+                        application.gui.fastLoginScene.reset();
                         try {
                             application.saveSettings();
                             application.stateService.exit();
-                            switchScene(application.gui.loginScene);
+                            //switchScene(application.gui.loginScene);
+                            switchScene(application.gui.fastLoginScene);
                         } catch (Exception ex) {
                             errorHandle(ex);
                         }

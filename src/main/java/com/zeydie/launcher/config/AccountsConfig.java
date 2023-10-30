@@ -8,6 +8,7 @@ import pro.gravit.launcher.LauncherNetworkAPI;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.config.RuntimeSettings;
 
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public final class AccountsConfig {
             account.setOauthRefreshToken(runtimeSettings.oauthRefreshToken);
             account.setOauthAccessToken(runtimeSettings.oauthAccessToken);
             account.setOauthExpire(runtimeSettings.oauthExpire);
+            account.setServerId(Reference.getServerIdForUUID(Reference.getUUIDForLogin(login)));
 
             this.accounts.add(account);
 
@@ -47,6 +49,8 @@ public final class AccountsConfig {
     public static class Account {
         @LauncherNetworkAPI
         private String login;
+        @LauncherNetworkAPI
+        private int serverId;
         @LauncherNetworkAPI
         private String oauthAccessToken;
         @LauncherNetworkAPI

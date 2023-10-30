@@ -1,8 +1,8 @@
 package pro.gravit.launcher.client.gui.scenes.servermenu;
 
+import com.zeydie.launcher.Reference;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -88,6 +88,8 @@ public class ServerMenuScene extends AbstractScene {
         profiles.sort(Comparator.comparingInt(ClientProfile::getSortIndex).thenComparing(ClientProfile::getTitle));
         int position = 0;
         for (ClientProfile profile : profiles) {
+            if (!Reference.isPlayerServer(profile.getSortIndex())) continue;
+
             ServerButtonCache cache = new ServerButtonCache();
             cache.serverButton = getServerButton(application, profile);
             cache.position = position;
@@ -117,7 +119,7 @@ public class ServerMenuScene extends AbstractScene {
         });
         CommonHelper.newThread("ServerPinger", true, () -> {
             for (ClientProfile profile : lastProfiles) {
-                for(ClientProfile.ServerProfile serverProfile : profile.getServers()) {
+                for (ClientProfile.ServerProfile serverProfile : profile.getServers()) {
                     if (!serverProfile.socketPing || serverProfile.serverAddress == null) continue;
                     try {
                         ServerPinger pinger = new ServerPinger(serverProfile, profile.getVersion());
