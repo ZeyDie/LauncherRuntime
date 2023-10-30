@@ -15,7 +15,7 @@ public class LookupHelper {
         for (int i = 0; i < names.length; ++i) {
             current = current.lookup(names[i]);
             if (current == null) {
-                throw new LookupException(names, i);
+                throw new LookupException(node, names, i);
             }
         }
         return (T) current;
@@ -62,12 +62,12 @@ public class LookupHelper {
 
     public static class LookupException extends RuntimeException {
 
-        public LookupException(String[] stackName, int positionFailed) {
-            super(buildStack(stackName, positionFailed));
+        public LookupException(Node node, String[] stackName, int positionFailed) {
+            super(buildStack(node, stackName, positionFailed));
         }
 
-        private static String buildStack(String[] args, int positionFailed) {
-            StringBuilder stringBuilder = new StringBuilder("Lookup failed ");
+        private static String buildStack(Node node, String[] args, int positionFailed) {
+            StringBuilder stringBuilder = new StringBuilder("Lookup failed " + (node.getParent() != null ? node.getParent().getId() : "null") + " " + node.getId() + " " + node.getStyle());
             boolean first = true;
             for (int i = 0; i < args.length; ++i) {
                 if (!first)

@@ -8,7 +8,6 @@ import pro.gravit.launcher.LauncherNetworkAPI;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.config.RuntimeSettings;
 
-import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -2,7 +2,6 @@ package pro.gravit.launcher.client.gui.scenes.login.methods;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import pro.gravit.launcher.client.gui.JavaFXApplication;

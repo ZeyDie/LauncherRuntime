@@ -1,7 +1,6 @@
 package pro.gravit.launcher.client;
 
 import javafx.application.Application;
-import pro.gravit.launcher.Launcher;
 import pro.gravit.launcher.LauncherEngine;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.gui.RuntimeProvider;
@@ -14,8 +13,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class StdJavaRuntimeProvider implements RuntimeProvider {

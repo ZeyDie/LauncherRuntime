@@ -4,6 +4,7 @@ import com.zeydie.launcher.config.AccountsConfig;
 import javafx.scene.image.ImageView;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.Nullable;
 import pro.gravit.launcher.client.DirBridge;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.SkinManager;
@@ -27,6 +28,7 @@ public final class Reference {
     public static final String skinUrl = "https://minefite.net/ExtraModules/sac/skins/%s.png";
     private static final String serverIdUrl = "https://admin.minefite.net/fs/launcher-serverId.php?uuid=%s";
     private static final String uuidUrl = "https://admin.minefite.net/fs/launcher-uuid.php?player=%s";
+    private static final String serverNameUrl = "https://admin.minefite.net/fs/launcher-serverName.php?serverId=%d";
 
     public static String getLoginOfRefreshToken(@NonNull final String token) {
         return token.split("\\.")[0];
@@ -41,7 +43,13 @@ public final class Reference {
         imageView.maxWidth(35);
 
         cacheSkin(login);
-        ServerMenuScene.putAvatarToImageView(JavaFXApplication.getInstance(), login, imageView);
+
+        if (JavaFXApplication.getInstance().skinManager.getSkin(login) != null)
+            ServerMenuScene.putAvatarToImageView(JavaFXApplication.getInstance(), login, imageView);
+        else {
+            cacheSkin("default");
+            ServerMenuScene.putAvatarToImageView(JavaFXApplication.getInstance(), "default", imageView);
+        }
 
         return imageView;
     }
@@ -80,9 +88,9 @@ public final class Reference {
                 @NonNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
                 @NonNull final BufferedReader reader = new BufferedReader(inputStreamReader)
         ) {
-            @NonNull final String uuid = reader.readLine();
+            @Nullable final String uuid = reader.readLine();
 
-            return uuid.isEmpty() ? UUID.randomUUID() : UUID.fromString(uuid);
+            return (uuid == null || uuid.isEmpty()) ? UUID.randomUUID() : UUID.fromString(uuid);
         }
     }
 
@@ -95,6 +103,21 @@ public final class Reference {
                 .filter(account -> account.getOauthAccessToken().equals(runtimeSettings.oauthAccessToken) && account.getOauthRefreshToken().equals(runtimeSettings.oauthRefreshToken))
                 .findAny();
 
-        return filtered.filter(account -> account.getServerId() == serverId).isPresent();
+        return filtered.filter(account -> account.getServerId() == serverId || account.getServerId() == -1).isPresent();
+    }
+
+    @SneakyThrows
+    public static @NonNull String getServerOfServerId(final int serverId) {
+        @NonNull final URL url = new URL(String.format(serverNameUrl, serverId));
+        @NonNull final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setRequestMethod("GET");
+
+        try (
+                @NonNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
+                @NonNull final BufferedReader reader = new BufferedReader(inputStreamReader)
+        ) {
+            return reader.readLine();
+        }
     }
 }
