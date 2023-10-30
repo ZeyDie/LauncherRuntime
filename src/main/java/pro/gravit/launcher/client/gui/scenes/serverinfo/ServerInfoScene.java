@@ -1,5 +1,6 @@
 package pro.gravit.launcher.client.gui.scenes.serverinfo;
 
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Label;
@@ -23,9 +24,11 @@ import pro.gravit.launcher.profiles.ClientProfile;
 import pro.gravit.launcher.profiles.ClientProfileVersions;
 import pro.gravit.launcher.profiles.optional.OptionalView;
 import pro.gravit.launcher.request.auth.SetProfileRequest;
-import pro.gravit.utils.helper.*;
+import pro.gravit.utils.helper.CommonHelper;
+import pro.gravit.utils.helper.JVMHelper;
+import pro.gravit.utils.helper.JavaHelper;
+import pro.gravit.utils.helper.LogHelper;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -99,7 +102,7 @@ public class ServerInfoScene extends AbstractScene {
         serverButtonContainer.getChildren().clear();
         serverButton = ServerMenuScene.getServerButton(application, profile);
         serverButton.addTo(serverButtonContainer);
-        serverButton.enableSaveButton(application.getTranslation("runtime.scenes.serverinfo.serverButton.game"), (e) -> launchClient());
+        ((Button)LookupHelper.lookup(this.layout, new String[] { "#startProfile" })).setOnAction(e -> launchClient());
         ServerMenuScene.putAvatarToImageView(application, application.stateService.getUsername(), avatar);
     }
 

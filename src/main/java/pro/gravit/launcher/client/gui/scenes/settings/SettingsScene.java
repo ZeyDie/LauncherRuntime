@@ -161,7 +161,7 @@ public class SettingsScene extends AbstractScene {
         ClientProfile profile = application.stateService.getProfile();
         ServerButtonComponent serverButton = ServerMenuScene.getServerButton(application, profile);
         serverButton.addTo(serverButtonContainer);
-        serverButton.enableSaveButton(null, (e) -> {
+        ((Button)LookupHelper.lookup(this.layout, new String[] { "#save" })).setOnAction(e -> {
             try {
                 profileSettings.apply();
                 application.triggerManager.process(profile, application.stateService.getOptionalView());
@@ -170,9 +170,7 @@ public class SettingsScene extends AbstractScene {
                 errorHandle(exception);
             }
         });
-        serverButton.enableResetButton(null, (e) -> {
-            reset();
-        });
+        ((Button)LookupHelper.lookup(this.layout, new String[] { "#reset" })).setOnAction(e -> reset());
         componentList.getChildren().clear();
         add("Debug", profileSettings.debug, (value) -> profileSettings.debug = value);
         add("AutoEnter", profileSettings.autoEnter, (value) -> profileSettings.autoEnter = value);

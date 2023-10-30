@@ -2,7 +2,6 @@ package pro.gravit.launcher.client.gui.scenes.options;
 
 import com.google.gson.reflect.TypeToken;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -51,7 +50,7 @@ public class OptionsScene extends AbstractScene {
         ClientProfile profile = application.stateService.getProfile();
         ServerButtonComponent serverButton = ServerMenuScene.getServerButton(application, profile);
         serverButton.addTo(serverButtonContainer);
-        serverButton.enableSaveButton(null, (e) -> {
+        ((Button)LookupHelper.lookup(this.layout, new String[] { "#save" })).setOnAction(e -> {
             try {
                 application.stateService.setOptionalView(profile, optionalView);
                 switchScene(application.gui.serverInfoScene);
@@ -59,7 +58,7 @@ public class OptionsScene extends AbstractScene {
                 errorHandle(exception);
             }
         });
-        serverButton.enableResetButton(null, (e) -> {
+        ((Button)LookupHelper.lookup(this.layout, new String[] { "#reset" })).setOnAction(e -> {
             componentList.getChildren().clear();
             application.stateService.setOptionalView(profile, new OptionalView(profile));
             addProfileOptionals(application.stateService.getOptionalView());

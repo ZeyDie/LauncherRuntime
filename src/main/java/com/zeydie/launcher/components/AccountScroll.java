@@ -9,10 +9,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import lombok.NonNull;
+import lombok.SneakyThrows;
+import org.jetbrains.annotations.Nullable;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.config.RuntimeSettings;
-import pro.gravit.launcher.request.Request;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 public final class AccountScroll {
@@ -71,16 +74,22 @@ public final class AccountScroll {
         return loginButton;
     }
 
-    private ImageView getServerIcon(@NonNull final AccountsConfig.Account account) {
-        @NonNull final ImageView serverImage = new ImageView(
-                new Image(
-                        //this.getClass().getResourceAsStream("/runtime/images/buttons/exit/exit.png")
-                        this.getClass().getResourceAsStream(String.format("/runtime/images/fastlogin/servers/%d.png", account.getServerId()))
-                )
-        );
+    @SneakyThrows
+    private @NonNull ImageView getServerIcon(@NonNull final AccountsConfig.Account account) {
+        final int serverId = account.getServerId();
 
-        final int width = 30;
-        final int height = 30;
+        @Nullable InputStream inputStream = this.getClass().getResourceAsStream(String.format("/runtime/images/fastlogin/servers/%d.png", serverId));
+
+        if (inputStream == null)
+            inputStream = this.getClass().getResourceAsStream("/runtime/images/fastlogin/servers/null.png");
+        if (inputStream == null)
+            inputStream = new URL("https://img.favpng.com/19/6/24/check-mark-computer-icons-sign-clip-art-png-favpng-iFiVE36gqaa5HBVQ4AWZz1tHP.jpg").openStream();
+
+        assert inputStream != null;
+        @NonNull final ImageView serverImage = new ImageView(new Image(inputStream));
+
+        final int width = 25;
+        final int height = 25;
 
         serverImage.setFitHeight(height);
         serverImage.setFitWidth(width);
@@ -92,6 +101,7 @@ public final class AccountScroll {
         return serverImage;
     }
 
+    @SneakyThrows
     private Button getExitButton(@NonNull final AccountsConfig.Account account) {
         @NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
         @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
@@ -99,12 +109,12 @@ public final class AccountScroll {
         @NonNull final AccountsConfig accountsConfig = Accounts.getAccountsConfig();
         @NonNull final List<AccountsConfig.Account> accountList = accountsConfig.getAccounts();
 
-        @NonNull final ImageView exitImage = new ImageView(
-                new Image(
-                        //this.getClass().getResourceAsStream("/runtime/images/buttons/exit/exit.png")
-                        this.getClass().getResourceAsStream("/runtime/images/fastlogin/trash.png")
-                )
-        );
+        @Nullable InputStream inputStream = this.getClass().getResourceAsStream("/runtime/images/fastlogin/trash.png");
+
+        if (inputStream == null)
+            inputStream = new URL("https://img.favpng.com/19/6/24/check-mark-computer-icons-sign-clip-art-png-favpng-iFiVE36gqaa5HBVQ4AWZz1tHP.jpg").openStream();
+
+        @NonNull final ImageView exitImage = new ImageView(new Image(inputStream));
 
         final int width = 18;
         final int height = 21;

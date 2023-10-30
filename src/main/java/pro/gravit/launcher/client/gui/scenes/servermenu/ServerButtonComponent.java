@@ -20,8 +20,6 @@ public class ServerButtonComponent extends AbstractVisualComponent {
     private static final String SERVER_BUTTON_FXML = "components/serverButton.fxml";
     private static final String SERVER_BUTTON_CUSTOM_FXML = "components/serverButton/%s.fxml";
     public ClientProfile profile;
-    private Button saveButton;
-    private Button resetButton;
 
     protected ServerButtonComponent(JavaFXApplication application, ClientProfile profile) {
         super(getFXMLPath(application, profile), application);
@@ -76,26 +74,10 @@ public class ServerButtonComponent extends AbstractVisualComponent {
                 update.run();
             });
         }
-        saveButton = LookupHelper.lookup(layout, "#save");
-        resetButton = LookupHelper.lookup(layout, "#reset");
     }
 
     public void setOnMouseClicked(EventHandler<? super MouseEvent> eventHandler) {
         layout.setOnMouseClicked(eventHandler);
-    }
-
-    public void enableSaveButton(String text, EventHandler<ActionEvent> eventHandler) {
-        saveButton.setVisible(true);
-        if (text != null)
-            saveButton.setText(text);
-        saveButton.setOnAction(eventHandler);
-    }
-
-    public void enableResetButton(String text, EventHandler<ActionEvent> eventHandler) {
-        resetButton.setVisible(true);
-        if (text != null)
-            resetButton.setText(text);
-        resetButton.setOnAction(eventHandler);
     }
 
     public void addTo(Pane pane) {

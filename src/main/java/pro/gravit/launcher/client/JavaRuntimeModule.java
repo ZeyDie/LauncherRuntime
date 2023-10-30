@@ -20,7 +20,6 @@ import pro.gravit.utils.helper.LogHelper;
 
 import javax.swing.*;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Base64;
 
 public class JavaRuntimeModule extends LauncherModule {
