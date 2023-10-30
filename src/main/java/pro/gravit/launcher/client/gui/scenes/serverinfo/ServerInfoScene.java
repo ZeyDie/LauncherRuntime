@@ -1,6 +1,5 @@
 package pro.gravit.launcher.client.gui.scenes.serverinfo;
 
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Label;
@@ -95,14 +94,23 @@ public class ServerInfoScene extends AbstractScene {
     public void reset() {
         avatar.setImage(originalAvatarImage);
         ClientProfile profile = application.stateService.getProfile();
-        LookupHelper.<Label>lookupIfPossible(layout, "#serverName").ifPresent((e) -> e.setText(profile.getTitle()));
-        LookupHelper.<Label>lookupIfPossible(layout, "#serverDescription").ifPresent((e) -> e.setText(profile.getInfo()));
-        LookupHelper.<Label>lookupIfPossible(layout, "#nickname").ifPresent((e) -> e.setText(application.stateService.getUsername()));
-        Pane serverButtonContainer = LookupHelper.lookup(layout, "#serverButton");
+        LookupHelper.lookupIfPossible(this.layout, new String[]{"#serverName"}).ifPresent(e -> ((Label) e).setText(profile.getTitle()));
+        LookupHelper.lookupIfPossible(this.layout, new String[]{"#serverDescription"}).ifPresent(e -> ((Label) e).setText(profile.getInfo()));
+        LookupHelper.lookupIfPossible(this.layout, new String[]{"#profileVersion"}).ifPresent(e -> ((Label) e).setText(profile.getProperty("profileVersion")));
+        LookupHelper.lookupIfPossible(this.layout, new String[]{"#gameTheme"}).ifPresent(e -> ((Label) e).setText(profile.getProperty("gameTheme")));
+        LookupHelper.lookupIfPossible(this.layout, new String[]{"#point1"}).ifPresent(e -> ((Label) e).setText(profile.getProperty("point1")));
+        LookupHelper.lookupIfPossible(this.layout, new String[]{"#point2"}).ifPresent(e -> ((Label) e).setText(profile.getProperty("point2")));
+        LookupHelper.lookupIfPossible(this.layout, new String[]{"#point3"}).ifPresent(e -> ((Label) e).setText(profile.getProperty("point3")));
+        LookupHelper.lookupIfPossible(this.layout, new String[]{"#point4"}).ifPresent(e -> ((Label) e).setText(profile.getProperty("point4")));
+        LookupHelper.lookupIfPossible(this.layout, new String[]{"#point5"}).ifPresent(e -> ((Label) e).setText(profile.getProperty("point5")));
+        LookupHelper.lookupIfPossible(this.layout, new String[]{"#point6"}).ifPresent(e -> ((Label) e).setText(profile.getProperty("point6")));
+        LookupHelper.lookupIfPossible(this.layout, new String[]{"#point7"}).ifPresent(e -> ((Label) e).setText(profile.getProperty("point7")));
+        LookupHelper.lookupIfPossible(this.layout, new String[]{"#nickname"}).ifPresent(e -> ((Label) e).setText(this.application.stateService.getUsername()));
+        Pane serverButtonContainer = LookupHelper.lookup(this.layout, new String[]{"#serverButton"});
         serverButtonContainer.getChildren().clear();
         serverButton = ServerMenuScene.getServerButton(application, profile);
         serverButton.addTo(serverButtonContainer);
-        ((Button)LookupHelper.lookup(this.layout, new String[] { "#startProfile" })).setOnAction(e -> launchClient());
+        ((Button) LookupHelper.lookup(this.layout, new String[]{"#startProfile"})).setOnAction(e -> launchClient());
         ServerMenuScene.putAvatarToImageView(application, application.stateService.getUsername(), avatar);
     }
 
@@ -127,7 +135,7 @@ public class ServerInfoScene extends AbstractScene {
                 }
             });
         };
-        if(profile.getVersion().compareTo(ClientProfileVersions.MINECRAFT_1_6_4) <= 0) {
+        if (profile.getVersion().compareTo(ClientProfileVersions.MINECRAFT_1_6_4) <= 0) {
             application.gui.updateScene.sendUpdateRequest(profile.getAssetDir(), target, profile.getAssetUpdateMatcher(), true, null, false, next);
         } else {
             application.gui.updateScene.sendUpdateAssetRequest(profile.getAssetDir(), target, profile.getAssetUpdateMatcher(), true, profile.getAssetIndex(), next);
@@ -136,10 +144,10 @@ public class ServerInfoScene extends AbstractScene {
 
     private void doLaunchClient(Path assetDir, HashedDir assetHDir, Path clientDir, HashedDir clientHDir, ClientProfile profile, OptionalView view, JavaHelper.JavaVersion javaVersion, HashedDir jvmHDir) {
         RuntimeSettings.ProfileSettings profileSettings = application.getProfileSettings();
-        if(javaVersion == null) {
+        if (javaVersion == null) {
             javaVersion = application.javaService.getRecommendJavaVersion(profile);
         }
-        if(javaVersion == null) {
+        if (javaVersion == null) {
             javaVersion = JavaHelper.JavaVersion.getCurrentJavaVersion();
         }
         ClientLauncherProcess clientLauncherProcess = new ClientLauncherProcess(clientDir, assetDir, javaVersion,
@@ -163,8 +171,7 @@ public class ServerInfoScene extends AbstractScene {
                     }
                 } catch (Throwable e) {
                     LogHelper.error(e);
-                    if (getCurrentStage().getVisualComponent() instanceof DebugScene) { //TODO: FIX
-                        DebugScene debugScene = (DebugScene) getCurrentStage().getVisualComponent();
+                    if (getCurrentStage().getVisualComponent() instanceof DebugScene debugScene) { //TODO: FIX
                         debugScene.append(String.format("Launcher fatal error(Write Params Thread): %s: %s", e.getClass().getName(), e.getMessage()));
                         if (debugScene.currentProcess != null && debugScene.currentProcess.isAlive()) {
                             debugScene.currentProcess.destroy();
@@ -192,12 +199,16 @@ public class ServerInfoScene extends AbstractScene {
     }
 
     private void showJavaAlert(ClientProfile profile) {
-        if((JVMHelper.ARCH_TYPE == JVMHelper.ARCH.ARM32 || JVMHelper.ARCH_TYPE == JVMHelper.ARCH.ARM64) && profile.getVersion().compareTo(ClientProfileVersions.MINECRAFT_1_12_2) <= 0) {
+        if ((JVMHelper.ARCH_TYPE == JVMHelper.ARCH.ARM32 || JVMHelper.ARCH_TYPE == JVMHelper.ARCH.ARM64) && profile.getVersion().compareTo(ClientProfileVersions.MINECRAFT_1_12_2) <= 0) {
             application.messageManager.showDialog(application.getTranslation("runtime.scenes.serverinfo.javaalert.lwjgl2.header"),
-                    String.format(application.getTranslation("runtime.scenes.serverinfo.javaalert.lwjgl2.description"), profile.getRecommendJavaVersion()), () -> {}, () -> {}, true);
+                    String.format(application.getTranslation("runtime.scenes.serverinfo.javaalert.lwjgl2.description"), profile.getRecommendJavaVersion()), () -> {
+                    }, () -> {
+                    }, true);
         } else {
             application.messageManager.showDialog(application.getTranslation("runtime.scenes.serverinfo.javaalert.header"),
-                    String.format(application.getTranslation("runtime.scenes.serverinfo.javaalert.description"), profile.getRecommendJavaVersion()), () -> {}, () -> {}, true);
+                    String.format(application.getTranslation("runtime.scenes.serverinfo.javaalert.description"), profile.getRecommendJavaVersion()), () -> {
+                    }, () -> {
+                    }, true);
         }
     }
 
@@ -209,25 +220,25 @@ public class ServerInfoScene extends AbstractScene {
             hideOverlay(0, (ev) -> {
                 RuntimeSettings.ProfileSettings profileSettings = application.getProfileSettings();
                 JavaHelper.JavaVersion javaVersion = null;
-                for(JavaHelper.JavaVersion v : application.javaService.javaVersions) {
-                    if(v.jvmDir.toAbsolutePath().toString().equals(profileSettings.javaPath)) {
+                for (JavaHelper.JavaVersion v : application.javaService.javaVersions) {
+                    if (v.jvmDir.toAbsolutePath().toString().equals(profileSettings.javaPath)) {
                         javaVersion = v;
                     }
                 }
-                if(javaVersion == null && profileSettings.javaPath != null && !application.guiModuleConfig.forceDownloadJava) {
+                if (javaVersion == null && profileSettings.javaPath != null && !application.guiModuleConfig.forceDownloadJava) {
                     try {
                         javaVersion = JavaHelper.JavaVersion.getByPath(Paths.get(profileSettings.javaPath));
                     } catch (Throwable e) {
-                        if(LogHelper.isDevEnabled()) {
+                        if (LogHelper.isDevEnabled()) {
                             LogHelper.error(e);
                         }
                         LogHelper.warning("Incorrect java path %s", profileSettings.javaPath);
                     }
                 }
-                if(javaVersion == null || application.javaService.isIncompatibleJava(javaVersion, profile)) {
+                if (javaVersion == null || application.javaService.isIncompatibleJava(javaVersion, profile)) {
                     javaVersion = application.javaService.getRecommendJavaVersion(profile);
                 }
-                if(javaVersion == null) {
+                if (javaVersion == null) {
                     showJavaAlert(profile);
                     return;
                 }
@@ -240,10 +251,10 @@ public class ServerInfoScene extends AbstractScene {
                         errorHandle(e);
                     }
                     application.gui.updateScene.sendUpdateRequest(jvmDirName, javaVersion.jvmDir, null, true, application.stateService.getOptionalView(), false, (jvmHDir) -> {
-                        if(JVMHelper.OS_TYPE == JVMHelper.OS.LINUX || JVMHelper.OS_TYPE == JVMHelper.OS.MACOSX) {
+                        if (JVMHelper.OS_TYPE == JVMHelper.OS.LINUX || JVMHelper.OS_TYPE == JVMHelper.OS.MACOSX) {
                             Path javaFile = finalJavaVersion.jvmDir.resolve("bin").resolve("java");
-                            if(Files.exists(javaFile)) {
-                                if(!javaFile.toFile().setExecutable(true)) {
+                            if (Files.exists(javaFile)) {
+                                if (!javaFile.toFile().setExecutable(true)) {
                                     LogHelper.warning("Set permission for %s unsuccessful", javaFile.toString());
                                 }
                             }

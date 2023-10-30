@@ -10,8 +10,8 @@ javafx {
     version = "17"
     modules = ['javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.web']
 }
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+sourceCompatibility = "17.PREVIEW"
+targetCompatibility = "17.PREVIEW"
 group 'pro.gravit.launcher'
 version '2.2.2'
 def mainClassName = "pro.gravit.launcher.client.JavaRuntimeModule"
