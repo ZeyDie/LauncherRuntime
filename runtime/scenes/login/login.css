@@ -1,39 +1,44 @@
-/*-- DrLeonardo styles refactor --*/
-
 @import "../../styles/global.css";
 @import "../../styles/variables.css";
 
-/*-- Вертикальная полоса на главной сцене --*/
-.vline{
-    -fx-background-color: -fx-grayTr;
-}
-
-/*-- Ошибки --*/
-.authButtonError{
-    -fx-fill: -fx-red;
-}
-
-/*-- Ввод данных --*/
-#login,
-#password {
+.vline {
     -fx-background-color: transparent;
-    -fx-background-radius: 0;
-    -fx-font-size: 14px;
-    -fx-text-fill: -fx-header;
-    -fx-font-weight: bold;
+}
+
+.authButtonError {
+    -fx-opacity: 0;
+}
+
+#login,
+#password,
+#accountButton {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-border-color: transparent;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-font-size: 18px;
     -fx-cursor: text;
+    -fx-text-fill: rgba(255, 255, 255, 0.50);
 }
+
 #password:focused,
-#login:focused {
-    -fx-text-fill: -fx-black2C;
+#login:focused,
+#accountButton:focused {
+    -fx-background-color: rgba(255, 255, 255, 0.20);
+    -fx-text-fill: #fff;
+    -fx-border-color: #E2B53A;
+    -fx-text-fill: rgba(255, 255, 255, 1);
 }
+
 .field-auth {
     -fx-font-size: 18px;
     -fx-text-fill: -fx-black2C;
     -fx-font-weight: bold;
     -fx-cursor: text;
 }
-#1st,#2st,#3st,#4st,#5st,#6st {
+
+#1st, #2st, #3st, #4st, #5st, #6st {
     -fx-background-color: transparent;
     -fx-background-insets: 0.0 5.0 0.0 5.0;
     -fx-padding: 0;
@@ -42,14 +47,94 @@
     -fx-background-radius: 0;
 }
 
+.exit1 {
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-background-image: url('../../images/buttons/auth/register/back.png');
+}
+
+.exit1:hover {
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-background-image: url('../../images/buttons/auth/register/back.png');
+    -fx-opacity: 0.9;
+}
+
+.exit1:pressed {
+    -fx-opacity: 0.7;
+}
+
+#authBorder {
+    -fx-background-color: transparent;
+    -fx-text-fill: transparent;
+    -fx-fill: transparent;
+
+}
+
+#regButton000 {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../../images/buttons/auth/register/register.png');
+}
+
+/*--вход--*/
+#authButton000 {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../../images/buttons/auth/register_button.png');
+}
+
+#authButton000:hover {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../../images/buttons/auth/register_button_hover.png');
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.35), 25, 0.0, 0, 8);
+}
+
+#authButton000:pressed {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../../images/buttons/auth/register_button_pressed.png');
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.25), 25, 0.0, 0, 8);
+}
+
+/*--вход--*/
+#authButton001 {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../../images/buttons/auth/login/auth.png');
+}
+
+#authButton001:hover {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../../images/buttons/auth/login/auth_hover.png');
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.35), 25, 0.0, 0, 8);
+}
+
+#authButton001:pressed {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../../images/buttons/auth/login/auth_pressed.png');
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.25), 25, 0.0, 0, 8);
+}
+
+/*--вход--*/
+
+/*--социал--*/
+#authButton {
+    -fx-background-color: transparent;
+    -fx-font-size: 0.1px;
+    -fx-text-fill: transparent;
+    -fx-fill: transparent;
+}
 
 /*-- Чекбоксы --*/
 #savePassword,
 #autoenter {
-    -fx-font-size: 7pt;
     -fx-background-image: url('../../images/icons/checkbox_off.png');
-    -fx-text-fill: -fx-black2C;
 }
+
 #savePassword:selected,
 #autoenter:selected {
     -fx-background-image: url('../../images/icons/checkbox_on.png');
@@ -57,50 +142,69 @@
 
 /*-- Метод авторизации --*/
 #authList {
-    -fx-background-color: -fx-grayTr;
+    -fx-background-color: transparent;
     -fx-background-radius: 10px;
 }
 
 /*-- Ссылки --*/
 .createAccount-text {
-    -fx-font-weight: bold;
-    -fx-font-size: 9px;
+    -fx-font-family: "Gilroy-Regular";
+    -fx-font-size: 12px;
     -fx-text-align: left;
-    -fx-fill: -fx-green;
+    -fx-fill: rgba(255, 255, 255, 0.25);
 }
+
 .createAccount-text:hover,
 .createAccount-text:pressed {
-    -fx-fill: -fx-green-hover;
+    -fx-fill: #fff;
     -fx-cursor: hand;
 }
+
 .forgotPass {
-    -fx-font-weight: bold;
-    -fx-font-size: 9px;
-    -fx-text-align: right;
-    -fx-fill: -fx-grayD;
+    -fx-font-family: "Gilroy-Regular";
+    -fx-font-size: 12px;
+    -fx-text-align: left;
+    -fx-fill: rgba(255, 255, 255, 0.25);
 }
+
 .forgotPass:hover,
 .forgotPass:pressed {
-    -fx-fill: -fx-black2C-hover;
+    -fx-fill: #fff;
     -fx-cursor: hand;
 }
+
 .textLogin {
-    -fx-fill: -fx-grayD;
-    -fx-font-size: 9px;
-    -fx-text-align: left;
+    -fx-fill: #fff;
+    -fx-font-size: 18px;
+    -fx-text-align: center;
 }
+
 .hyperlink:focused {
     -fx-border-width: 0;
 }
+
 .rectangle {
     -fx-stroke: -fx-black2C;
 }
 
 /*-- Приветствие --*/
 #welcome {
-    -fx-font-size: 12px;
-    -fx-align-items: center;
+    -fx-font-family: "Gilroy-Extrabold";
+    -fx-font-size: 18px;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-align-items: left;
 }
+
+#playerName {
+    -fx-font-family: "Gilroy-Bold";
+    -fx-font-size: 16px;
+    -fx-opacity: 0.5;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-align-items: left;
+}
+
 #otherWelcome {
     -fx-font-size: 14px;
     -fx-text-align: center;
@@ -117,25 +221,15 @@
 
 /*-- Кнопка входа --*/
 .auth {
-     -fx-fill: -fx-green;
+    -fx-fill: -fx-green;
 }
+
 .auth2fa {
     -fx-fill: -fx-white;
 }
+
 .logo {
     -fx-fill: -fx-black2C;
-}
-#authBorder {
-    -fx-fill: -fx-greenTr;
-}
-#logoBorder {
-    -fx-fill: -fx-grayLTr;
-}
-#authButton {
-    -fx-background-color: transparent;
-    -fx-font-weight: bold;
-    -fx-font-size: 24px;
-    -fx-text-fill: -fx-white;
 }
 
 /*-- Надпись названия продукта --*/
@@ -146,19 +240,11 @@
     -fx-font-weight: bold;
     -fx-fill: -fx-grayDTr;
 }
-.logoTextGray {
-    -fx-fill: -fx-grayD !important;
-}
 
 /*-- Приветствие игрока --*/
-#text-2fa,
-#playerName {
+#text-2fa {
     -fx-font-weight: bold;
     -fx-font-size: 24px;
-    -fx-align-items: center;
-}
-#welcome {
-    -fx-font-size: 14px;
     -fx-align-items: center;
 }
 
@@ -171,22 +257,26 @@
     -fx-font-size: 10px;
     -fx-text-align: left;
 }
+
 .radio-button > .radio,
-.radio-button:focused > .radio  {
+.radio-button:focused > .radio {
     -fx-background-repeat: no-repeat;
     -fx-background-color: transparent;
     -fx-background-image: url('../../images/icons/checkbox_off.png');
     -fx-padding: 5px;
 }
+
 .radio-button:selected {
     -fx-background-radius: 5px;
     -fx-background-color: -fx-grayLDTr;
     -fx-text-fill: -fx-black2C-hover;
 }
+
 .radio-button .radio:selected {
     -fx-background-color: -fx-white;
     -fx-background-image: null;
 }
+
 .radio-button:selected .dot {
     -fx-background-insets: 0;
     -fx-background-radius: 7px;
@@ -196,5 +286,3 @@
 #authRadio {
     -fx-max-width: 99999;
 }
-
-/*-- DrLeonardo styles refactor --*/

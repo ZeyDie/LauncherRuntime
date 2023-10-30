@@ -1,26 +1,28 @@
-/*-- DrLeonardo styles refactor --*/
 @import "./variables.css";
 
-/*-- Подключение шрифтов --*/
 @font-face {
-    font-family: 'Open Sans';
-    src: url('./OpenSans-Regular.ttf');
+    font-family: 'Gilroy-RegularItalic';
+    src: url('../fonts_extrastudio/Gilroy-RegularItalic.ttf');
 }
 @font-face {
-    font-family: 'Open Sans Bold';
-    src: url('./OpenSans-Bold.ttf');
+    font-family: 'Gilroy-Semibold';
+    src: url('../fonts_extrastudio/Gilroy-Semibold.ttf');
 }
 @font-face {
-    font-family: 'Open Sans Italic';
-    src: url('./OpenSans-Italic.ttf');
+    font-family: 'Gilroy-Regular';
+    src: url('../fonts_extrastudio/Gilroy-Regular.ttf');
 }
 @font-face {
-    font-family: 'Open Sans Light';
-    src: url('./OpenSans-Light.ttf');
+    font-family: 'Gilroy-Bold';
+    src: url('../fonts_extrastudio/Gilroy-Bold.ttf');
 }
 @font-face {
-    font-family: 'Open Sans BoldItalic';
-    src: url('./OpenSans-BoldItalic.ttf');
+    font-family: 'Gilroy-Medium';
+    src: url('../fonts_extrastudio/Gilroy-Medium.ttf');
+}
+@font-face {
+    font-family: 'Gilroy-Extrabold';
+    src: url('../fonts_extrastudio/Gilroy-Extrabold.ttf');
 }
 
 Button,
@@ -29,10 +31,10 @@ ComboBox,
 RadioButton {
     -fx-cursor: hand;
 }
-
-/*-- Шрифты --*/
-.root {
-    -fx-font-family: "Open Sans";
+.welcome_servmenu{
+    -fx-font-family: "Gilroy-Medium";
+    -fx-font-size: 15px;
+    -fx-fill: rgba(255, 255, 255, 0.5);
 }
 
 /*-- Вид блоков --*/
@@ -56,16 +58,6 @@ RadioButton {
 /*-- Управление прозрачностью --*/
 .transparent {
     -fx-background-color: transparent;
-    -fx-background-size: cover;
-}
-
-/*-- Импорт фона --*/
-#layout {
-    -fx-background-image: url('../images/background.png');
-    -fx-background-size: cover;
-}
-.blur {
-    -fx-background-image: url('../images/background-blur.png') !important;
     -fx-background-size: cover;
 }
 
@@ -107,19 +99,36 @@ RadioButton {
 
 /*-- Информация игрока --*/
 #nickname {
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-text-fill: -fx-black2C;
+    -fx-font-family: "Gilroy-Bold";
+    -fx-font-size: 17px;
+    -fx-text-fill: #fff;
 }
 #money {
-    -fx-font-weight: normal;
-    -fx-font-size: 12px;
-    -fx-text-fill: -fx-black2C;
+    -fx-font-family: "Gilroy-ExtraBold";
+    -fx-font-size: 28px;
+    -fx-text-fill: #F0A22B;
 }
 #avatar {
     -fx-background-position: center;
     -fx-background-color: transparent;
     -fx-font-smoothing-type: lcd;
+}
+#deauth {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../images/buttons/exit/exit.png');
+}
+
+#deauth:hover {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../images/buttons/exit/exit_hover.png');
+}
+
+#deauth:pressed {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../images/buttons/exit/exit_pressed.png');
 }
 
 /*-- Заголовки --*/
@@ -135,7 +144,7 @@ RadioButton {
 
 /*-- Блок вывода --*/
 #output-detail {
-    -fx-background-color: -fx-grayTr;
+    -fx-background-color: transparent;
     -fx-background-radius: 20px;
 }
 
@@ -144,8 +153,9 @@ RadioButton {
     -fx-background-color: transparent;
     -fx-background-radius: 0;
     -fx-padding: 10px;
-    -fx-font-size: 12px;
-    -fx-text-color: -fx-black2C;
+    -fx-font-family: "Gilroy-Medium";
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(255, 255, 255, 0.25);
 }
 #output-detail > #output .content,
 #output-detail > #output .content {
@@ -194,10 +204,10 @@ RadioButton {
 /* check-box элементы */
 .check-box {
     -fx-background-color: transparent;
-    -fx-text-fill: -fx-black2C;
+    -fx-text-fill: #fff;
     -fx-background-image: url('../images/icons/checkbox1_off.png');
     -fx-background-repeat: no-repeat;
-    -fx-label-padding: 0 0 0 10px;
+    -fx-label-padding: -3 0 0 10px;
     -fx-font-size: 14px;
     -fx-text-align: left;
 }
@@ -244,18 +254,7 @@ RadioButton {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 }
-.scroll-bar:horizontal .track,
-.scroll-bar:vertical .track {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-.scroll-bar:horizontal .thumb,
-.scroll-bar:vertical .thumb {
-    -fx-background-color: -fx-black2C-hover;
-    -fx-background-radius: 10;
-    -fx-padding: 10 0 0 0px;
-    -fx-background-insets: 0, 0, 0, 10;
-}
+
 .scroll-bar {
     -fx-font-size: 6px;
 }
@@ -288,16 +287,17 @@ RadioButton {
 
 /* combo-box элементы */
 .combo-box {
-    -fx-background-color: -fx-grayLDTr;
+    -fx-background-color: rgba(255, 255, 255, 0.05);
     -fx-background-insets: 0 0 -1 0, 0, 1, 2;
-    -fx-background-radius: 5px;
+    -fx-background-radius: 6px;
     -fx-padding: 5;
-    -fx-text-fill: -fx-black2C;
+    -fx-text-fill: #fff;
+    -fx-font-family: "Gilroy-Medium";
     -fx-alignment: CENTER;
     -fx-content-display: LEFT;
 }
 .combo-box .list-cell {
-    -fx-text-fill: -fx-black2C;
+    -fx-text-fill: #fff;
 }
 .combo-box-popup .list-view{
     -fx-background-color: -fx-gray;
@@ -330,4 +330,3 @@ RadioButton {
     -fx-background-position: center center;
     -fx-background-size: 50% 25%;
 }
-/*-- DrLeonardo styles refactor --*/

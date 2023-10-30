@@ -1,13 +1,16 @@
 package pro.gravit.launcher.client.gui.scenes.login;
 
+import com.zeydie.launcher.Accounts;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -16,6 +19,7 @@ import pro.gravit.launcher.client.StdJavaRuntimeProvider;
 import pro.gravit.launcher.client.events.ClientExitPhase;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.helper.LookupHelper;
+import pro.gravit.launcher.client.gui.impl.ContextHelper;
 import pro.gravit.launcher.client.gui.overlays.AbstractOverlay;
 import pro.gravit.launcher.client.gui.scenes.AbstractScene;
 import pro.gravit.launcher.client.gui.scenes.login.methods.*;
@@ -34,7 +38,9 @@ import pro.gravit.launcher.request.auth.details.AuthLoginOnlyDetails;
 import pro.gravit.launcher.request.auth.details.AuthPasswordDetails;
 import pro.gravit.launcher.request.auth.details.AuthTotpDetails;
 import pro.gravit.launcher.request.auth.details.AuthWebViewDetails;
-import pro.gravit.launcher.request.auth.password.*;
+import pro.gravit.launcher.request.auth.password.Auth2FAPassword;
+import pro.gravit.launcher.request.auth.password.AuthMultiPassword;
+import pro.gravit.launcher.request.auth.password.AuthOAuthPassword;
 import pro.gravit.launcher.request.update.LauncherRequest;
 import pro.gravit.launcher.request.update.ProfilesRequest;
 import pro.gravit.launcher.utils.LauncherUpdater;
@@ -98,7 +104,7 @@ public class LoginScene extends AbstractScene {
         }
     }
 
-    private void launcherRequest() {
+    public void launcherRequest() {
         LauncherRequest launcherRequest = new LauncherRequest();
         processRequest(application.getTranslation("runtime.overlay.processing.text.launcher"), launcherRequest, (result) -> {
             if (result.launcherExtendedToken != null) {
@@ -129,13 +135,14 @@ public class LoginScene extends AbstractScene {
             getAvailabilityAuth();
         }, (event) -> LauncherEngine.exitLauncher(0));
     }
-    private void getAvailabilityAuth() {
+
+    public void getAvailabilityAuth() {
         GetAvailabilityAuthRequest getAvailabilityAuthRequest = new GetAvailabilityAuthRequest();
         processRequest(application.getTranslation("runtime.overlay.processing.text.authAvailability"), getAvailabilityAuthRequest, (auth) -> contextHelper.runInFxThread(() -> {
             this.auth = auth.list;
             authList.setVisible(auth.list.size() != 1);
             for (GetAvailabilityAuthRequestEvent.AuthAvailability authAvailability : auth.list) {
-                if(!authAvailability.visible) {
+                if (!authAvailability.visible) {
                     continue;
                 }
                 if (application.runtimeSettings.lastAuth == null) {
@@ -146,7 +153,7 @@ public class LoginScene extends AbstractScene {
                     changeAuthAvailability(authAvailability);
                 addAuthAvailability(authAvailability);
             }
-            if(this.authAvailability == null && auth.list.size() > 0) {
+            if (this.authAvailability == null && auth.list.size() > 0) {
                 changeAuthAvailability(auth.list.get(0));
             }
             hideOverlay(0, (event) -> {
@@ -156,7 +163,7 @@ public class LoginScene extends AbstractScene {
     }
 
     private void postInit() {
-        if(application.guiModuleConfig.autoAuth || application.runtimeSettings.autoAuth) {
+        if (application.guiModuleConfig.autoAuth || application.runtimeSettings.autoAuth) {
             contextHelper.runInFxThread(this::loginWithGui);
         }
     }
@@ -265,7 +272,7 @@ public class LoginScene extends AbstractScene {
         return "login";
     }
 
-    private boolean tryOAuthLogin() {
+    public boolean tryOAuthLogin() {
         if (application.runtimeSettings.lastAuth != null && authAvailability.name.equals(application.runtimeSettings.lastAuth.name) && application.runtimeSettings.oauthAccessToken != null) {
             if (application.runtimeSettings.oauthExpire != 0 && application.runtimeSettings.oauthExpire < System.currentTimeMillis()) {
                 RefreshTokenRequest request = new RefreshTokenRequest(authAvailability.name, application.runtimeSettings.oauthRefreshToken);
@@ -326,11 +333,11 @@ public class LoginScene extends AbstractScene {
     }
 
     private boolean checkSavePasswordAvailable(AuthRequest.AuthPasswordInterface password) {
-        if(password instanceof Auth2FAPassword)
+        if (password instanceof Auth2FAPassword)
             return false;
-        if(password instanceof AuthMultiPassword)
+        if (password instanceof AuthMultiPassword)
             return false;
-        if(authAvailability == null || authAvailability.details == null || authAvailability.details.size() == 0 || !( authAvailability.details.get(0) instanceof AuthPasswordDetails ) )
+        if (authAvailability == null || authAvailability.details == null || authAvailability.details.size() == 0 || !(authAvailability.details.get(0) instanceof AuthPasswordDetails))
             return false;
         return true;
     }
@@ -342,7 +349,7 @@ public class LoginScene extends AbstractScene {
         if (savePassword) {
             application.runtimeSettings.login = successAuth.recentLogin;
             if (result.oauth == null) {
-                if(successAuth.recentPassword != null && checkSavePasswordAvailable(successAuth.recentPassword)) {
+                if (successAuth.recentPassword != null && checkSavePasswordAvailable(successAuth.recentPassword)) {
                     application.runtimeSettings.password = successAuth.recentPassword;
                 } else {
                     LogHelper.warning("2FA/MFA Password not saved");
@@ -351,6 +358,8 @@ public class LoginScene extends AbstractScene {
                 application.runtimeSettings.oauthAccessToken = result.oauth.accessToken;
                 application.runtimeSettings.oauthRefreshToken = result.oauth.refreshToken;
                 application.runtimeSettings.oauthExpire = Request.getTokenExpiredTime();
+
+                Accounts.authed();
             }
             application.runtimeSettings.lastAuth = authAvailability;
         }
@@ -461,7 +470,6 @@ public class LoginScene extends AbstractScene {
     }
 
 
-
     public class AuthFlow {
         private final List<Integer> authFlow = new ArrayList<>();
         private GetAvailabilityAuthRequestEvent.AuthAvailability authAvailability;
@@ -478,14 +486,15 @@ public class LoginScene extends AbstractScene {
 
         private CompletableFuture<LoginAndPasswordResult> tryLogin(String resentLogin, AuthRequest.AuthPasswordInterface resentPassword) {
             CompletableFuture<LoginScene.LoginAndPasswordResult> authFuture = null;
-            if(resentPassword != null) {
+            if (resentPassword != null) {
                 authFuture = new CompletableFuture<>();
                 authFuture.complete(new LoginAndPasswordResult(resentLogin, resentPassword));
             }
             for (int i : authFlow) {
                 GetAvailabilityAuthRequestEvent.AuthAvailabilityDetails details = authAvailability.details.get(i);
                 final AbstractAuthMethod<GetAvailabilityAuthRequestEvent.AuthAvailabilityDetails> authMethod = detailsToMethod(details);
-                if (authFuture == null) authFuture = authMethod.show(details).thenCompose((e) -> authMethod.auth(details));
+                if (authFuture == null)
+                    authFuture = authMethod.show(details).thenCompose((e) -> authMethod.auth(details));
                 else {
                     authFuture = authFuture.thenCompose(e -> authMethod.show(details).thenApply(x -> e));
                     authFuture = authFuture.thenCompose(first -> authMethod.auth(details).thenApply(second -> {

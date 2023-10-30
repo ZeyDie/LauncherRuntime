@@ -1,0 +1,63 @@
+@import "../../styles/global.css";
+@import "../../styles/variables.css";
+
+#authButton {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../../images/fastlogin/auth.png');
+}
+
+#authPane {
+    -fx-background-color: rgba(53, 53, 53, 0.50);
+    -fx-background-radius: 18px;
+}
+
+.accountButton-hovered,
+.accountButton {
+    -fx-background-color: transparent;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 17px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-graphic-text-gap: 15px;
+}
+
+.accountButton-hovered,
+.accountButton:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-background-radius: 12px;
+}
+
+#addAccountButton {
+    -fx-background-color: transparent;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-text-fill: #949393;
+    -fx-font-size: 15px;
+    -fx-font-style: italic;
+    -fx-alignment: CENTER_RIGHT;
+    -fx-text-alignment: right;
+}
+
+.exitButton {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: rgba(255, 255, 255, 0.10);
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: derive(#ffffff, 10.0%);
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: derive(#ffffff, 90.0%);
+}
+
+.scroll-bar:vertical .track,
+.scroll-bar:vertical .thumb,
+.scroll-bar:vertical .thumb:hover,
+.scroll-bar:vertical .corner {
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 2.0em;
+}

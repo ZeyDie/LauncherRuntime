@@ -54,6 +54,10 @@ repositories {
     }
     mavenCentral()
     mavenLocal()
+
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -64,6 +68,16 @@ dependencies {
     implementation 'io.netty:netty-codec-http:4.1.67.Final'
     implementation 'com.github.oshi:oshi-core:5.8.1'
     implementation 'com.google.code.gson:gson:2.8.8'
+
+    // https://github.com/ZeyDie/Simple-GSON
+    implementation group: 'com.zeydie', name: 'SGson', version: '2.9.x-1.1'
+
+    // https://mvnrepository.com/artifact/org.jetbrains/annotations
+    implementation group: 'org.jetbrains', name: 'annotations', version: '24.0.1'
+
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
 }
 
 wrapper {

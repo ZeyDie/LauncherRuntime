@@ -3,25 +3,113 @@
 @import "../../styles/global.css";
 @import "../../styles/variables.css";
 
-/*-- Вывод данных --*/
+@font-face {
+src: url('../../fonts_extrastudio/Gilroy-RegularItalic.ttf');
+}/* Gilroy-RegularItalic */
+@font-face {
+src: url('../../fonts_extrastudio/Gilroy-Semibold.ttf');
+}/* Gilroy-Semibold */
+@font-face {
+src: url('../../fonts_extrastudio/Gilroy-Regular.ttf');
+}/* Gilroy-Regular */
+@font-face {
+src: url('../../fonts_extrastudio/Gilroy-Bold.ttf');
+}/* Gilroy-Bold*/
+@font-face {
+src: url('../../fonts_extrastudio/Gilroy-Medium.ttf');
+}/* Gilroy-Medium*/
+@font-face {
+src: url('../../fonts_extrastudio/Gilroy-Extrabold.ttf');
+}/* Gilroy-Extrabold*/
+
+
 #options-detail {
-    -fx-background-color: -fx-grayTr;
-    -fx-background-radius: 20px;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+}
+
+.back_info {
+  -fx-background-repeat: no-repeat;
+  -fx-background-color: transparent;
+  -fx-background-image: url('../../images/buttons/auth/register/back.png');
+
+}
+
+.back_info:hover {
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-background-image: url('../../images/buttons/auth/register/back.png');
+    -fx-opacity: 0.9;
+}
+
+.back_info:pressed {
+    -fx-opacity: 0.7;
+}
+
+#reset {
+    -fx-background-color: rgba(226, 58, 58, 0.15);
+    -fx-text-fill: #E23A3A;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#reset:hover {
+    -fx-background-color: #E23A3A;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#reset:pressed {
+    -fx-background-color: #CC3434;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+
+#save {
+    -fx-background-color: #E2B53A;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#save:hover {
+    -fx-background-color: #E5BC4D;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.35), 25, 0.0, 0, 8);
+}
+
+#save:pressed {
+    -fx-background-color: #CCA334;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.25), 25, 0.0, 0, 8);
 }
 
 /*-- Чекбоксы --*/
 .optional-container {
     -fx-background-color: transparent;
-    -fx-padding: 15 0 0 15px;
+    -fx-padding: 15 0 0 0px;
 }
 .optional-checkbox {
-    -fx-fill: -fx-black2C;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
+    -fx-font-family: "Gilroy-Bold";
+    -fx-font-size: 15px;
+    -fx-text-fill: #fff;
 }
 .optional-label {
-    -fx-fill: -fx-black2C;
-    -fx-font-size: 12px;
+    -fx-font-family: "Gilroy Medium";
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 12.5px;
     -fx-label-padding: 0 20 0 30px;
 }
-/*-- DrLeonardo styles refactor --*/

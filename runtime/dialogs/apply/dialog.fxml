@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Text?>
 
 <!-- DrLeonardo refactor -->
 
-<Pane prefHeight="221.0" prefWidth="588.0" styleClass="dialog" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<Pane prefHeight="240.0" prefWidth="400.0" styleClass="dialog" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
+   <ImageView fitHeight="240.0" fitWidth="400.0">
+      <image>
+         <Image url="@../../images/dialog_apply.png" />
+      </image>
+   </ImageView>
 
     <!-- Заголовок диалога-->
-    <Label id="headingDialog" alignment="CENTER" contentDisplay="CENTER" prefHeight="61.0" prefWidth="589.0" text="%runtime.dialogs.apply.applyDialog" textAlignment="CENTER" />
-    <Label id="textDialog" alignment="TOP_LEFT" layoutX="51.0" layoutY="63.0" prefHeight="101.0" prefWidth="487.0" styleClass="dialogText" textAlignment="JUSTIFY" wrapText="true" />
+    <Label id="headingDialog" contentDisplay="CENTER" layoutX="22.0" prefHeight="61.0" prefWidth="352.0" styleClass="headingDialog" text="%runtime.dialogs.apply.applyDialog" textAlignment="CENTER" />
+    <Label id="textDialog" alignment="TOP_LEFT" layoutX="21.0" layoutY="63.0" prefHeight="101.0" prefWidth="340.0" styleClass="dialogText" text="ТЕКСТ ТЕКСТ " textAlignment="JUSTIFY" wrapText="true" />
 
     <!-- Кнопки управления -->
     <Button id="close" layoutX="538.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="icon-button" visible="false">
@@ -29,24 +38,24 @@
     </Button>
 
     <!-- Кнопка применить -->
-    <Button id="apply" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" layoutX="196.0" layoutY="168.0" styleClass="icon-button" textOverrun="CLIP">
+    <Button id="apply" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" layoutX="251.0" layoutY="190.0" prefHeight="39.0" prefWidth="138.0" textOverrun="CLIP">
         <graphic>
             <Pane>
                 <children>
-                    <Text fontSmoothingType="LCD" layoutX="2.0" layoutY="19.0" strokeType="OUTSIDE" styleClass="apply-button-text" text="%runtime.dialogs.apply.apply-button" textAlignment="CENTER" wrappingWidth="77.921875" />
-                    <SVGPath content="M1 6C1 5.17157 1.67157 4.5 2.5 4.5H78.5C79.3284 4.5 80 5.17157 80 6V26C80 26.8284 79.3284 27.5 78.5 27.5H2.5C1.67157 27.5 1 26.8284 1 26V6Z" styleClass="apply-button" />
+                    <Text fontSmoothingType="LCD" layoutX="2.0" layoutY="19.0" strokeType="OUTSIDE" textAlignment="CENTER" wrappingWidth="77.921875" />
+                    <SVGPath content="M1 6C1 5.17157 1.67157 4.5 2.5 4.5H78.5C79.3284 4.5 80 5.17157 80 6V26C80 26.8284 79.3284 27.5 78.5 27.5H2.5C1.67157 27.5 1 26.8284 1 26V6Z" opacity="0.0" />
                 </children>
             </Pane>
         </graphic>
     </Button>
 
     <!-- Кнопка отменить -->
-    <Button id="deny" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" layoutX="296.0" layoutY="168.0" styleClass="icon-button" textOverrun="CLIP">
+    <Button id="deny" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" layoutX="138.0" layoutY="190.0" minHeight="39.0" minWidth="99.0" prefHeight="39.0" prefWidth="99.0" textOverrun="CLIP">
         <graphic>
             <Pane>
                 <children>
-                    <Text fontSmoothingType="LCD" layoutX="2.0" layoutY="19.0" strokeType="OUTSIDE" styleClass="deny-button-text" text="%runtime.dialogs.apply.deny-button" textAlignment="CENTER" wrappingWidth="77.921875" />
-                    <SVGPath content="M1 6C1 5.17157 1.67157 4.5 2.5 4.5H78.5C79.3284 4.5 80 5.17157 80 6V26C80 26.8284 79.3284 27.5 78.5 27.5H2.5C1.67157 27.5 1 26.8284 1 26V6Z" styleClass="deny-button" />
+                    <Text fontSmoothingType="LCD" layoutX="2.0" layoutY="19.0" strokeType="OUTSIDE" styleClass="deny-button-text" textAlignment="CENTER" wrappingWidth="77.921875" />
+                    <SVGPath content="M1 6C1 5.17157 1.67157 4.5 2.5 4.5H78.5C79.3284 4.5 80 5.17157 80 6V26C80 26.8284 79.3284 27.5 78.5 27.5H2.5C1.67157 27.5 1 26.8284 1 26V6Z" opacity="0.0" styleClass="deny-button" />
                 </children>
             </Pane>
         </graphic>

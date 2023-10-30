@@ -3,13 +3,116 @@
 @import "../../styles/global.css";
 @import "../../styles/variables.css";
 
-.kill:hover,
-.kill:pressed {
-    -fx-fill: -fx-red !important;
+#kill {
+    -fx-background-color: rgba(226, 58, 58, 0.15);
+    -fx-text-fill: #E23A3A;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#kill:hover {
+    -fx-background-color: #E23A3A;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#kill:pressed {
+    -fx-background-color: #CC3434;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+
+#hastebin {
+    -fx-background-color: rgba(226, 181, 58, 0.15);
+    -fx-text-fill: rgba(226, 181, 58, 1);
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#hastebin:hover {
+    -fx-background-color: #E5BC4D;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.35), 25, 0.0, 0, 8);
+}
+
+#hastebin:pressed {
+    -fx-background-color: #CCA334;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.25), 25, 0.0, 0, 8);
+}
+
+.back_info {
+  -fx-background-repeat: no-repeat;
+  -fx-background-color: transparent;
+  -fx-background-image: url('../../images/buttons/auth/register/back.png');
+
+}
+
+.back_info:hover {
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-background-image: url('../../images/buttons/auth/register/back.png');
+    -fx-opacity: 0.9;
+}
+
+.back_info:pressed {
+    -fx-opacity: 0.7;
 }
 
 #version {
-    -fx-text-fill: -fx-grayD;
-    -fx-font-size: 8pt;
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 15px;
+    -fx-font-family: "Gilroy-Medium";
+    -fx-aligment: left;
 }
+
+
+
+/* Прогресс бар */
+.progress-bar {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-background-radius: 10px;
+}
+.progress-indicator {
+    -fx-background-color: transparent;
+}
+.progress-indicator .indicator {
+    -fx-background-color: transparent;
+}
+.progress-bar > .bar {
+    -fx-background-color: #E2B53A;
+    -fx-background-insets: 0;
+    -fx-background-radius: 10px;
+    -fx-padding: 0;
+}
+.progress-bar > .track {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 3px;
+}
+.progressError>.bar{
+    -fx-background-color: #FF4444;
+}
+.progress-lines {
+    -fx-stroke: -fx-gray;
+}
+.progress-text {
+    -fx-text-fill: -fx-gray;
+    -fx-fill: -fx-gray;
+    -fx-font-size: 13px;
+}
+
 /*-- DrLeonardo styles refactor --*/

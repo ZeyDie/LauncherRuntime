@@ -1,9 +1,11 @@
 package pro.gravit.launcher.client.gui;
 
+import com.zeydie.launcher.Accounts;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.Getter;
 import pro.gravit.launcher.*;
 import pro.gravit.launcher.api.DialogService;
 import pro.gravit.launcher.client.*;
@@ -66,6 +68,7 @@ public class JavaFXApplication extends Application {
     public PingService pingService;
     public OfflineService offlineService;
     public TriggerManager triggerManager;
+    @Getter
     private SettingsManager settingsManager;
     private PrimaryStage mainStage;
     private boolean debugMode;
@@ -116,6 +119,8 @@ public class JavaFXApplication extends Application {
         offlineService = new OfflineService(this);
         pingService = new PingService();
         registerCommands();
+
+        Accounts.load();
     }
 
     @Override
@@ -176,7 +181,7 @@ public class JavaFXApplication extends Application {
             gui.init();
             //
             if (!IS_NOGUI.get()) {
-                mainStage.setScene(gui.loginScene);
+                mainStage.setScene(gui.fastLoginScene);
                 mainStage.show();
                 if(offlineService.isOfflineMode()) {
                     messageManager.createNotification(getTranslation("runtime.offline.notification.header"), getTranslation("runtime.offline.notification.text"));

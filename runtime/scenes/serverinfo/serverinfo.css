@@ -2,22 +2,113 @@
 
 @import "../../styles/global.css";
 @import "../../styles/variables.css";
-
 /*-- Информация сервера --*/
+
+.back_info {
+  -fx-background-repeat: no-repeat;
+  -fx-background-color: transparent;
+  -fx-background-image: url('../../images/buttons/auth/register/back.png');
+
+}
+
+.back_info:hover {
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-background-image: url('../../images/buttons/auth/register/back.png');
+    -fx-opacity: 0.9;
+}
+
+.back_info:pressed {
+    -fx-opacity: 0.7;
+}
+
+#profileVersion, #gameTheme {
+    -fx-font-family: "Gilroy-Bold";
+    -fx-font-size: 14px;
+    -fx-text-fill: #fff;
+}
+#servtexter {
+    -fx-font-family: "Gilroy-Medium";
+    -fx-font-size: 18px;
+    -fx-fill: rgba(255, 255, 255, 0.5);
+}
+#startProfile {
+    -fx-background-color: #E2B53A;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#startProfile:hover {
+    -fx-background-color: #E5BC4D;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.35), 25, 0.0, 0, 8);
+}
+
+#startProfile:pressed {
+    -fx-background-color: #CCA334;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.25), 25, 0.0, 0, 8);
+}
+
+#clientSettings {
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-background-image: url('../../images/buttons/servinfo/play_opt.png');
+}
+
+#clientSettings:hover {
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-background-image: url('../../images/buttons/servinfo/play_opt_hover.png');
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.35), 25, 0.0, 0, 8);
+}
+
+#clientSettings:pressed {
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-background-image: url('../../images/buttons/servinfo/play_opt_pressed.png');
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.25), 25, 0.0, 0, 8);
+}
+
+#settings {
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-background-image: url('../../images/buttons/servinfo/setting.png');
+}
+
+#settings:hover {
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-background-image: url('../../images/buttons/servinfo/setting_hover.png');
+}
+
+#settings:pressed {
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-background-image: url('../../images/buttons/servinfo/setting_pressed.png');
+}
+
 #server-detail {
-    -fx-background-color: -fx-grayTr;
+    -fx-background-color: transparent;
     -fx-background-radius: 20px;
 }
 #server-detail > #serverName {
-    -fx-font-weight: bold;
-    -fx-font-size: 24px;
-    -fx-text-color: -fx-black2C;
+    -fx-font-family: "Gilroy-Extrabold";
+    -fx-font-size: 18px;
+    -fx-text-fill: #fff;
 }
 #server-detail > #serverDescription {
-    -fx-font-style: normal;
-    -fx-font-weight: normal;
-    -fx-font-size: 14px;
-    -fx-text-color: -fx-black2C;
+    -fx-font-family: "Gilroy Medium";
+    -fx-font-size: 18px;
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
 }
 
 /*-- Фон сервера --*/

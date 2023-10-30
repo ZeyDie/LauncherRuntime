@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+
+<!-- DrLeonardo refactor -->
+
+<Pane fx:id="serverButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="322.0" prefWidth="214.0" styleClass="b-20" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <Pane id="serverButtonLayout" prefHeight="322.0" prefWidth="214.0" styleClass="serverButtons">
+      <children>
+
+         <!-- Лого сервера -->
+         <ImageView id="serverLogo" fitHeight="308.0" fitWidth="200.0" layoutX="7.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../../images/servers/105b3fc3-8d79-4e19-b982-2fb095f44927.png" />
+         </ImageView>
+
+         <!-- Онлайн сервера -->
+         <Pane id="block-online" layoutX="156.0" layoutY="19.0" prefHeight="31.0" prefWidth="39.0">
+            <children>
+               <Label id="online" alignment="CENTER" prefHeight="31.0" prefWidth="39.0" text="..." />
+            </children>
+         </Pane>
+
+         <!-- Информация сервера -->
+         <Label id="nameServer" alignment="CENTER" minHeight="0.0" minWidth="0.0" opacity="0.0" prefHeight="0.0" prefWidth="0.0" text="SERVERNAME" textAlignment="CENTER" />
+         <Label id="genreServer" alignment="CENTER" minHeight="0.0" minWidth="0.0" opacity="0.0" prefHeight="0.0" prefWidth="0.0" text="HITECH" textAlignment="CENTER" />
+
+      </children>
+   </Pane>
+
+   <!-- Подключение стилей-->
+   <stylesheets>
+      <URL value="@components.css" />
+      <URL value="@../../styles/global.css" />
+      <URL value="@../../styles/variables.css" />
+   </stylesheets>
+
+</Pane>

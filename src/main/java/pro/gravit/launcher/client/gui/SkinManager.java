@@ -1,5 +1,6 @@
 package pro.gravit.launcher.client.gui;
 
+import com.zeydie.launcher.Reference;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelFormat;
@@ -49,7 +50,7 @@ public class SkinManager {
             Optional<Image> result = fxImageRef.get();
             if (result == null) { // It is normal
                 BufferedImage image = getFullImage();
-                if(image == null) {
+                if (image == null) {
                     return null;
                 }
                 result = Optional.ofNullable(convertToFxImage(image));
@@ -62,7 +63,7 @@ public class SkinManager {
             Optional<BufferedImage> result = avatarRef.get();
             if (result == null) { // It is normal
                 BufferedImage image = getFullImage();
-                if(image == null) {
+                if (image == null) {
                     return null;
                 }
                 result = Optional.of(sumBufferedImage(getHeadFromSkinImage(image), getHeadLayerFromSkinImage(image)));
@@ -75,7 +76,7 @@ public class SkinManager {
             Optional<Image> result = fxAvatarRef.get();
             if (result == null) { // It is normal
                 BufferedImage image = getHeadImage();
-                if(image == null) {
+                if (image == null) {
                     return null;
                 }
                 result = Optional.ofNullable(convertToFxImage(image));
@@ -152,7 +153,7 @@ public class SkinManager {
 
     public Image getScaledFxSkinHead(String username, int width, int height) {
         BufferedImage image = getSkinHead(username);
-        if(image == null) {
+        if (image == null) {
             return null;
         }
         return convertToFxImage(scaleImage(image, width, height));
@@ -180,6 +181,10 @@ public class SkinManager {
                 return ImageIO.read(input);
             } catch (FileNotFoundException fnfe) {
                 LogHelper.dev("User texture not found" + fnfe.getMessage());
+
+                if (!url.getPath().endsWith("default.png"))
+                    downloadSkin(new URL(String.format(Reference.skinUrl, "default")));
+
                 return null;
             }
         } catch (IOException e) {

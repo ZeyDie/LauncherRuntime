@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane fx:id="fastloginPane" prefHeight="492.0" prefWidth="440.0" styleClass="transparent"
+      xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <Pane fx:id="layout" prefHeight="492.0" prefWidth="440.0" styleClass="transparent">
+        <ImageView fitHeight="492.0" fitWidth="440.0">
+            <Image url="@../../images/fastlogin/background.png"/>
+        </ImageView>
+        <ImageView fitHeight="42.0" fitWidth="184.0" x="128.0" y="17.0">
+            <Image url="@../../images/fastlogin/logo.png"/>
+        </ImageView>
+        <Pane id="authPane" layoutX="25.0" layoutY="82.0" prefHeight="380.0" prefWidth="380.0">
+            <ImageView fitHeight="22.0" fitWidth="318.0" layoutX="31" layoutY="25">
+                <Image url="@../../images/fastlogin/choise.png"/>
+            </ImageView>
+            <ScrollPane id="accountsScrollPane" layoutX="25.0" layoutY="55" prefHeight="240.0" prefWidth="350.0">
+                <GridPane id="accountsGridPane" prefHeight="230.0" prefWidth="320.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="NEVER" minWidth="60.0" prefWidth="330.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints prefHeight="60" vgrow="NEVER"/>
+                    </rowConstraints>
+                </GridPane>
+            </ScrollPane>
+            <Button id="addAccountButton" layoutX="200.0" layoutY="290.0" mnemonicParsing="false" prefHeight="20"
+                    prefWidth="160" text="Добавить аккаунт"/>
+            <Button id="authButton" layoutX="25.0" layoutY="320.0" mnemonicParsing="false" prefHeight="45"
+                    prefWidth="330"/>
+        </Pane>
+    </Pane>
+
+    <stylesheets>
+        <URL value="@fastlogin.css"/>
+        <URL value="@../../styles/global.css"/>
+        <URL value="@../../styles/variables.css"/>
+    </stylesheets>
+</Pane>

@@ -5,98 +5,201 @@
 
 /*-- Вывод данных --*/
 #settings-detail {
-    -fx-background-color: -fx-grayTr;
+    -fx-background-color: transparent;
     -fx-background-radius: 20px;
+}
+
+.back_info {
+  -fx-background-repeat: no-repeat;
+  -fx-background-color: transparent;
+  -fx-background-image: url('../../images/buttons/auth/register/back.png');
+
+}
+
+.back_info:hover {
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-background-image: url('../../images/buttons/auth/register/back.png');
+    -fx-opacity: 0.9;
+}
+
+.back_info:pressed {
+    -fx-opacity: 0.7;
+}
+
+.text_patch {
+    -fx-font-family: "Gilroy-Medium";
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+}
+.text_patch:hover {
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+}
+.text_patch:pressed {
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+}
+#changeDir {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../../images/buttons/settings/change_dir.png');
+}
+
+#changeDir:hover {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../../images/buttons/settings/change_dir_hover.png');
+}
+
+#changeDir:pressed {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../../images/buttons/settings/change_dir_hover.png');
+    -fx-opacity: 0.8;
+}
+
+#reset {
+    -fx-background-color: rgba(226, 58, 58, 0.15);
+    -fx-text-fill: #E23A3A;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#reset:hover {
+    -fx-background-color: #E23A3A;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#reset:pressed {
+    -fx-background-color: #CC3434;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+
+#save {
+    -fx-background-color: #E2B53A;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#save:hover {
+    -fx-background-color: #E5BC4D;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.35), 25, 0.0, 0, 8);
+}
+
+#save:pressed {
+    -fx-background-color: #CCA334;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(three-pass-box, rgba(226, 181, 58, 0.25), 25, 0.0, 0, 8);
 }
 
 /* RAM настройки */
 #ramLabel {
-    -fx-font-weight: bold;
-    -fx-font-size: 12px;
-    -fx-text-fill: -fx-black2C;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 15px;
+    -fx-text-fill: #fff;
 }
 #ramSlider > .track {
-    -fx-background-color: -fx-ramGR;
-    -fx-pref-height: 4px;
+    -fx-background-color: transparent;
+    -fx-pref-height: 8px;
 }
 #ramSlider > .thumb {
     -fx-background-image: url("../../images/icons/thumb.png");
-    -fx-pref-width: 14px;
-    -fx-pref-height: 14px;
+    -fx-pref-width: 16px;
+    -fx-pref-height: 16px;
+}
+#ramSlider > .colored-track {
+    -fx-background-color: -fx-violet-hover;
+    -fx-pref-height: 8px;
+}
+#ramSlider > .animated-thumb {
+    -fx-background-color: transparent;
+}
+#ramSlider > .slider-value {
+    -fx-fill: -fx-white;
+    -fx-stroke: -fx-white;
 }
 .ramtext {
     -fx-font-size: 14px;
-    -fx-background-color: -fx-grayD;
+    -fx-background-color: #fff;
 }
 #ramInfo {
     -fx-font-size: 16px;
-    -fx-text-fill: -fx-grayD;
+    -fx-text-fill: #fff;
 }
 
 /*-- Чекбоксы --*/
 .settings-container {
     -fx-background-color: transparent;
-    -fx-padding: 15 0 0 15px;
+    -fx-padding: 12 0 0 15px;
 }
 .settings-checkbox {
-    -fx-fill: -fx-black2C;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
+    -fx-text-fill: #fff;
+    -fx-font-size: 15px;
+    -fx-font-family: "Gilroy-Bold";
 }
 .settings-label {
-    -fx-fill: -fx-black2C;
-    -fx-font-size: 12px;
-    -fx-label-padding: 0 20 0 30px;
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 12.5px;
+    -fx-font-family: "Gilroy-Medium";
+    -fx-label-padding: 3 0 0 30px;
 }
 
 /* Смена директорий */
 #folder {
-    -fx-background-color: -fx-gray;
-    -fx-background-radius: 0 0 20 20;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
     -fx-cursor: hand;
 }
 #patch {
-    -fx-font-size: 14px;
-    -fx-fill: -fx-grayD;
+    -fx-font-size: 12px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-fill: rgba(255, 255, 255, 0.5);
 }
 #patch:visited {
-    -fx-font-size: 14px;
-    -fx-fill: -fx-header;
+    -fx-font-size: 12px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-fill: rgba(255, 255, 255, 0.5);
 }
-#changeDir {
-    -fx-font-weight: bold;
-    -fx-font-size: 10px;
-    -fx-text-fill: -fx-header;
-    -fx-background-color: transparent;
-}
-#changeDir:hover,
-#changeDir:pressed {
-    -fx-text-fill: -fx-header-hover;
-}
-
 
 /* Описание Java */
 #javaError {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-fill: -fx-red;
-    -fx-text-fill: -fx-red;
+    -fx-font-size: 16px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-fill: #FF4444;
+    -fx-text-fill: #FF4444;
 }
 #javaSelect {
-    -fx-background-color: -fx-grayLTr;
+    -fx-background-color: transparent;
 }
 #javaSelect > #javaHeader {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-fill: -fx-black2C;
+    -fx-font-size: 12px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
 }
 #javaSelect > .javaDesc {
     -fx-fill: -fx-black2C;
     -fx-font-size: 12px;
 }
 #javaSelect > #javaPath {
-    -fx-font-size: 10px;
-    -fx-fill: -fx-grayD;
+  -fx-font-size: 12px;
+  -fx-font-family: "Gilroy-SemiBold";
+  -fx-text-fill: rgba(255, 255, 255, 0.5);
 }
 
 /*-- DrLeonardo styles refactor --*/

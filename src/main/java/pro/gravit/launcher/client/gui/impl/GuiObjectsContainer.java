@@ -1,5 +1,6 @@
 package pro.gravit.launcher.client.gui.impl;
 
+import com.zeydie.launcher.scene.FastLoginScene;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.overlays.AbstractOverlay;
 import pro.gravit.launcher.client.gui.overlays.ProcessingOverlay;
@@ -41,7 +42,11 @@ public class GuiObjectsContainer {
         this.application = application;
     }
 
+    public FastLoginScene fastLoginScene;
+
     public void init() {
+        this.fastLoginScene = registerScene(FastLoginScene.class);
+
         loginScene = registerScene(LoginScene.class);
         processingOverlay = registerOverlay(ProcessingOverlay.class);
 

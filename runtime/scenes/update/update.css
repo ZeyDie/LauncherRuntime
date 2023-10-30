@@ -1,15 +1,14 @@
-/*-- DrLeonardo styles refactor --*/
-
 @import "../../styles/global.css";
 @import "../../styles/variables.css";
 
-/*-- Информация о загрузке --*/
+/*-- ВАДИМ НУ ТЫ СУКА  Не? ненавижу тайно. --*/
 #outputUpdate {
-    -fx-background-color: -fx-grayTr;
-    -fx-background-radius: 20px;
-    -fx-fill: fx-black2C;
+    -fx-background-color: #292929;
+    -fx-background-radius: 14px;
+    -fx-text-fill: rgba(255, 255, 255, 0.25);
     -fx-padding: 7 0 0 10px;
     -fx-font-size: 12px;
+    -fx-font-family: "Gilroy-Medium";
 }
 #description {
     -fx-alignment: top-left;
@@ -17,33 +16,91 @@
     -fx-font-size: 10px;
 }
 #description.error {
-    -fx-text-fill: -fx-red;
+    -fx-text-fill: #FF4444;
+}
+
+
+#controls > #reload {
+    -fx-background-color: rgba(226, 58, 58, 0.15);
+    -fx-text-fill: #E23A3A;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#controls > #reload:hover {
+    -fx-background-color: #E23A3A;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#controls > #reload:pressed {
+    -fx-background-color: #CC3434;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#controls > #cancel {
+    -fx-background-color: rgba(226, 58, 58, 0.15);
+    -fx-text-fill: #E23A3A;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#controls > #cancel:hover {
+    -fx-background-color: #E23A3A;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
+}
+
+#controls > #cancel:pressed {
+    -fx-background-color: #CC3434;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-font-size: 16px;
 }
 
 /*-- Вывод данных --*/
 #update-detail {
-    -fx-background-color: -fx-grayTr;
+    -fx-background-color: transparent;
     -fx-background-radius: 20px;
 }
 #update-detail > .speed {
-    -fx-fill: -fx-updateGR;
+    -fx-fill: #E2B53A;
     -fx-text-align: center;
     -fx-font-size: 18px;
-    -fx-font-weight: bold;
+    -fx-font-family: "Gilroy-Bold";
 }
 #update-detail > .speed-text {
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-fill: #757575;
 }
 #update-detail > .speedError {
-    -fx-fill: -fx-red;
+    -fx-fill: #FF4444;
+    -fx-text-align: center;
     -fx-font-size: 18px;
+    -fx-font-family: "Gilroy-Bold";
 }
-
+#update-detail > .volume {
+    -fx-text-fill: #757575;
+    -fx-text-align: center;
+    -fx-font-size: 18px;
+    -fx-font-family: "Gilroy-SemiBold";
+}
 /* Прогресс бар */
 .progress-bar {
     -fx-indeterminate-bar-flip: false;
-    -fx-background-color: -fx-whiteG;
+    -fx-background-color: #292929;
+    -fx-background-radius: 14px;
 }
 .progress-indicator {
     -fx-background-color: transparent;
@@ -52,9 +109,9 @@
     -fx-background-color: transparent;
 }
 .progress-bar > .bar {
-    -fx-background-color: -fx-updateGR;
+    -fx-background-color: #E2B53A;
     -fx-background-insets: 0;
-    -fx-background-radius: 0;
+    -fx-background-radius: 14px;
     -fx-padding: 0;
 }
 .progress-bar > .track {
@@ -63,7 +120,7 @@
     -fx-background-radius: 3px;
 }
 .progressError>.bar{
-    -fx-background-color: -fx-errorGR;
+    -fx-background-color: #FF4444;
 }
 .progress-lines {
     -fx-stroke: -fx-gray;

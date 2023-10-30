@@ -1,7 +1,3 @@
-/*-- DrLeonardo styles refactor --*/
-
-/*-- Var library colors --*/
-
 * {
     -fx-green: #09BC6A;
     -fx-green-hover: #15D37C;
@@ -31,5 +27,3 @@
     -fx-updateGR: linear-gradient(from 20% 20% to 100% 100%, -fx-violet, #5D35B9);
     -fx-errorGR: linear-gradient(from 20% 20% to 100% 100%, #8D4CE0, #B93639);
 }
-
-/*-- DrLeonardo styles refactor --*/
