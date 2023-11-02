@@ -34,11 +34,17 @@ public final class FastLoginScene extends AbstractScene {
     @Override
     protected void doInit() throws Exception {
         this.accountsScroll = new AccountScroll(LookupHelper.lookup(super.layout, "#authPane", "#accountsScrollPane"));
+
+        if (this.accountsScroll.getGridPane().getChildren().isEmpty()) {
+            this.switchToLoginning();
+            return;
+        }
+
         this.addAccountButton = LookupHelper.lookup(super.layout, "#authPane", "#addAccountButton");
         this.authButton = LookupHelper.lookup(super.layout, "#authPane", "#authButton");
 
-        this.addAccountButton.setOnAction(event -> switchToLogin());
-        this.authButton.setOnAction(event -> switchAndLogin());
+        this.addAccountButton.setOnAction(event -> switchToLoginning());
+        this.authButton.setOnAction(event -> switchAuth());
     }
 
     @Override
@@ -48,7 +54,7 @@ public final class FastLoginScene extends AbstractScene {
     }
 
     @SneakyThrows
-    public void switchAndLogin() {
+    public void switchAuth() {
         if (this.selectedAccount == null) return;
 
         @NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
@@ -65,7 +71,7 @@ public final class FastLoginScene extends AbstractScene {
     }
 
     @SneakyThrows
-    public void switchToLogin() {
+    public void switchToLoginning() {
         @NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
         @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
 

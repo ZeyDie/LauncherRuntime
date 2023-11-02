@@ -8,6 +8,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +21,7 @@ import java.util.List;
 
 public final class AccountScroll {
     private final ScrollPane scrollPane;
+    @Getter
     private final GridPane gridPane;
 
     public AccountScroll(
