@@ -43,6 +43,13 @@
     -fx-background-color: transparent;
 }
 
+.serverImage:hover,
+.exitButton:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 15, 0, 0, 0);
+    -fx-scale-y: 1.15;
+    -fx-scale-x: 1.15;
+}
+
 .scroll-bar:vertical .track {
     -fx-background-color: rgba(255, 255, 255, 0.10);
 }
