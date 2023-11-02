@@ -187,7 +187,9 @@ public class JavaFXApplication extends Application {
             gui.init();
             //
             if (!IS_NOGUI.get()) {
-                mainStage.setScene(gui.fastLoginScene);
+                mainStage.setScene(
+                        Accounts.getAccountsConfig().getAccounts().isEmpty() ? gui.loginScene : gui.fastLoginScene
+                );
                 mainStage.show();
                 if(offlineService.isOfflineMode()) {
                     messageManager.createNotification(getTranslation("runtime.offline.notification.header"), getTranslation("runtime.offline.notification.text"));

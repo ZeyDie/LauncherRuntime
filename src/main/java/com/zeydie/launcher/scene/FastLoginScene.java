@@ -1,5 +1,6 @@
 package com.zeydie.launcher.scene;
 
+import com.zeydie.launcher.Accounts;
 import com.zeydie.launcher.components.AccountScroll;
 import com.zeydie.launcher.config.AccountsConfig;
 import javafx.scene.control.Button;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.config.RuntimeSettings;
 import pro.gravit.launcher.client.gui.helper.LookupHelper;
+import pro.gravit.launcher.client.gui.impl.ContextHelper;
 import pro.gravit.launcher.client.gui.scenes.AbstractScene;
 
 public final class FastLoginScene extends AbstractScene {
@@ -35,16 +37,16 @@ public final class FastLoginScene extends AbstractScene {
     protected void doInit() throws Exception {
         this.accountsScroll = new AccountScroll(LookupHelper.lookup(super.layout, "#authPane", "#accountsScrollPane"));
 
-        if (this.accountsScroll.getGridPane().getChildren().isEmpty()) {
-            this.switchToLoginning();
-            return;
-        }
-
         this.addAccountButton = LookupHelper.lookup(super.layout, "#authPane", "#addAccountButton");
         this.authButton = LookupHelper.lookup(super.layout, "#authPane", "#authButton");
 
         this.addAccountButton.setOnAction(event -> switchToLoginning());
         this.authButton.setOnAction(event -> switchAuth());
+
+        if (Accounts.getAccountsConfig().getAccounts().isEmpty()) {
+            this.switchToLoginning();
+            return;
+        }
     }
 
     @Override
@@ -64,10 +66,12 @@ public final class FastLoginScene extends AbstractScene {
         runtimeSettings.oauthRefreshToken = this.selectedAccount.getOauthRefreshToken();
         runtimeSettings.oauthExpire = this.selectedAccount.getOauthExpire();
 
-        super.switchScene(JavaFXApplication.getInstance().gui.loginScene);
-        super.currentStage.stage.centerOnScreen();
+        ContextHelper.runInFxThreadStatic(() -> {
+            this.switchScene(JavaFXApplication.getInstance().gui.loginScene);
+            this.currentStage.stage.centerOnScreen();
 
-        JavaFXApplication.getInstance().gui.loginScene.tryOAuthLogin();
+            JavaFXApplication.getInstance().gui.loginScene.tryOAuthLogin();
+        });
     }
 
     @SneakyThrows
@@ -80,7 +84,9 @@ public final class FastLoginScene extends AbstractScene {
         runtimeSettings.oauthRefreshToken = null;
         runtimeSettings.oauthExpire = 0;
 
-        super.switchScene(JavaFXApplication.getInstance().gui.loginScene);
-        super.currentStage.stage.centerOnScreen();
+        ContextHelper.runInFxThreadStatic(() -> {
+            super.switchScene(JavaFXApplication.getInstance().gui.loginScene);
+            super.currentStage.stage.centerOnScreen();
+        });
     }
 }
