@@ -444,7 +444,11 @@ public class LoginScene extends AbstractScene {
         }
 
         public void hideOverlay(double delay, EventHandler<ActionEvent> onFinished) {
-            LoginScene.this.hideOverlay(delay, onFinished);
+            contextHelper.runInFxThread(() -> {
+                switchScene(application.gui.fastLoginScene);
+                currentStage.stage.centerOnScreen();
+            });
+            //LoginScene.this.hideOverlay(delay, onFinished);
         }
 
         public AuthService getAuthService() {

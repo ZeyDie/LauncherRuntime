@@ -137,7 +137,7 @@ public abstract class AbstractScene extends AbstractVisualComponent {
             newOverlay.requestFocus();
             fade(newOverlay, 0.0, 0.0, 1.0, (ev) -> {
                 hideTransformStarted = false;
-                if(onFinished != null) {
+                if (onFinished != null) {
                     onFinished.handle(ev);
                 }
             });
