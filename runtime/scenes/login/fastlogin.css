@@ -7,9 +7,10 @@
     -fx-background-image: url('../../images/fastlogin/auth.png');
 }
 
-#authPane {
-    -fx-background-color: rgba(53, 53, 53, 0.50);
-    -fx-background-radius: 18px;
+#authButton:hover {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url('../../images/fastlogin/auth_hover.png');
 }
 
 .accountButton-hovered,
@@ -43,6 +44,7 @@
     -fx-background-color: transparent;
 }
 
+#addAccountButton:hover,
 .serverImage:hover,
 .exitButton:hover {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 15, 0, 0, 0);
@@ -68,4 +70,28 @@
 .scroll-bar:vertical .corner {
     -fx-background-insets: 2.0, 0.0, 0.0;
     -fx-background-radius: 2.0em;
+}
+
+.tm-1,
+.tm-2,
+.tm-3,
+.tm-4 {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+}
+
+.tm-1 {
+    -fx-background-image: url('../../images/fastlogin/newyear/1.png');
+}
+
+.tm-2 {
+    -fx-background-image: url('../../images/fastlogin/newyear/2.png');
+}
+
+.tm-3 {
+    -fx-background-image: url('../../images/fastlogin/newyear/3.png');
+}
+
+.tm-3 {
+    -fx-background-image: url('../../images/fastlogin/newyear/4.png');
 }

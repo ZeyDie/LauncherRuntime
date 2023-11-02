@@ -4,6 +4,7 @@ import com.zeydie.launcher.Reference;
 import com.zeydie.sgson.SGsonFile;
 import lombok.Data;
 import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import pro.gravit.launcher.LauncherNetworkAPI;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.config.RuntimeSettings;
@@ -41,7 +42,10 @@ public final class AccountsConfig {
     }
 
     public void save() {
-        new SGsonFile(Reference.accountConfig).writeJsonFile(this);
+        @NotNull final SGsonFile file = new SGsonFile(Reference.accountConfig);
+
+        file.getFile().mkdirs();
+        file.writeJsonFile(this);
     }
 
     @Data

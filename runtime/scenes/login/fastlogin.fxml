@@ -12,10 +12,8 @@
         <ImageView fitHeight="492.0" fitWidth="440.0">
             <Image url="@../../images/fastlogin/background.png"/>
         </ImageView>
-        <ImageView fitHeight="42.0" fitWidth="184.0" x="128.0" y="17.0">
-            <Image url="@../../images/fastlogin/logo.png"/>
-        </ImageView>
-        <Pane id="authPane" layoutX="25.0" layoutY="82.0" prefHeight="380.0" prefWidth="380.0">
+        <Pane id="newyearPane" layoutX="12" prefHeight="21" prefWidth="440" />
+        <Pane id="authPane" layoutX="28.0" layoutY="89.0" prefHeight="380.0" prefWidth="380.0">
             <ImageView fitHeight="22.0" fitWidth="318.0" layoutX="31" layoutY="25">
                 <Image url="@../../images/fastlogin/choise.png"/>
             </ImageView>

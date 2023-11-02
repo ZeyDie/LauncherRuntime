@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public final class Reference {
-    public static final Path launcherDirectory = DirBridge.dir;
+    public static final Path launcherDirectory = DirBridge.defaultUpdatesDir;
 
     public static final Path accountConfig = launcherDirectory.resolve("accounts.cfg");
 
@@ -95,7 +95,8 @@ public final class Reference {
     }
 
     public static boolean isPlayerServer(final int serverId) {
-        @NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
+        return true;
+        /*@NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
         @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
 
         @NonNull final List<AccountsConfig.Account> accountList = Accounts.getAccountsConfig().getAccounts();
@@ -103,7 +104,7 @@ public final class Reference {
                 .filter(account -> account.getOauthAccessToken().equals(runtimeSettings.oauthAccessToken) && account.getOauthRefreshToken().equals(runtimeSettings.oauthRefreshToken))
                 .findAny();
 
-        return filtered.filter(account -> account.getServerId() == serverId || account.getServerId() == -1).isPresent();
+        return filtered.filter(account -> account.getServerId() == serverId || account.getServerId() == -1).isPresent();*/
     }
 
     @SneakyThrows

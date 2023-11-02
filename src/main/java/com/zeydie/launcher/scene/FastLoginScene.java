@@ -4,6 +4,7 @@ import com.zeydie.launcher.Accounts;
 import com.zeydie.launcher.components.AccountScroll;
 import com.zeydie.launcher.config.AccountsConfig;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -15,14 +16,22 @@ import pro.gravit.launcher.client.gui.helper.LookupHelper;
 import pro.gravit.launcher.client.gui.impl.ContextHelper;
 import pro.gravit.launcher.client.gui.scenes.AbstractScene;
 
+import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public final class FastLoginScene extends AbstractScene {
     private AccountScroll accountsScroll;
     private Button addAccountButton;
     private Button authButton;
+    private Pane newyearPane;
     @Setter
     @Getter
     @Nullable
     private AccountsConfig.Account selectedAccount;
+
+    private final Timer timer = new Timer();
+    private int scene = 1;
 
     public FastLoginScene(@NonNull final JavaFXApplication application) {
         super("scenes/login/fastlogin.fxml", application);
@@ -43,10 +52,25 @@ public final class FastLoginScene extends AbstractScene {
         this.addAccountButton.setOnAction(event -> switchToLoginning());
         this.authButton.setOnAction(event -> switchAuth());
 
-        if (Accounts.getAccountsConfig().getAccounts().isEmpty()) {
+        this.newyearPane = LookupHelper.lookup(super.layout, "#newyearPane");
+
+        if (Accounts.getAccountsConfig().getAccounts().isEmpty())
             this.switchToLoginning();
-            return;
-        }
+
+        this.timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                /*if (!(JavaFXApplication.getInstance().getCurrentScene() instanceof FastLoginScene))
+                    this.cancel();*/
+
+                newyearPane.getStyleClass().clear();
+                newyearPane.getStyleClass().add("tm-" + scene);
+
+                scene += 1;
+
+                if (scene > 3) scene = 1;
+            }
+        }, 0, 1000);
     }
 
     @Override
