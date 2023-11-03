@@ -9,7 +9,9 @@ import pro.gravit.utils.helper.LogHelper;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.awt.image.SinglePixelPackedSampleModel;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,45 +31,6 @@ public class SkinManager {
         this.application = application;
     }
 
-    public void addSkin(String username, URL url) {
-        this.map.put(username, new SkinEntry(url));
-    }
-
-    public BufferedImage getSkin(String username) {
-        SkinEntry entry = (SkinEntry) this.map.get(username);
-        return entry == null ? null : entry.getFullImage();
-    }
-
-    public BufferedImage getSkinHead(String username) {
-        SkinEntry entry = (SkinEntry) this.map.get(username);
-        return entry == null ? null : entry.getHeadImage();
-    }
-
-    public Image getFxSkin(String username) {
-        SkinEntry entry = (SkinEntry) this.map.get(username);
-        return entry == null ? null : entry.getFullFxImage();
-    }
-
-    public Image getFxSkinHead(String username) {
-        SkinEntry entry = (SkinEntry) this.map.get(username);
-        return entry == null ? null : entry.getHeadFxImage();
-    }
-
-    public BufferedImage getScaledSkin(String username, int width, int height) {
-        BufferedImage image = this.getSkin(username);
-        return scaleImage(image, width, height);
-    }
-
-    public BufferedImage getScaledSkinHead(String username, int width, int height) {
-        BufferedImage image = this.getSkinHead(username);
-        return scaleImage(image, width, height);
-    }
-
-    public Image getScaledFxSkin(String username, int width, int height) {
-        BufferedImage image = this.getSkin(username);
-        return convertToFxImage(scaleImage(image, width, height));
-    }
-
     public static BufferedImage sumBufferedImage(BufferedImage img1, BufferedImage img2) {
         int wid = Math.max(img1.getWidth(), img2.getWidth());
         int height = Math.max(img1.getHeight(), img2.getHeight());
@@ -77,15 +40,10 @@ public class SkinManager {
         g2.setPaint(Color.WHITE);
         g2.fillRect(0, 0, wid, height);
         g2.setColor(oldColor);
-        g2.drawImage(img1, (BufferedImageOp) null, 0, 0);
-        g2.drawImage(img2, (BufferedImageOp) null, 0, 0);
+        g2.drawImage(img1, null, 0, 0);
+        g2.drawImage(img2, null, 0, 0);
         g2.dispose();
         return result;
-    }
-
-    public Image getScaledFxSkinHead(String username, int width, int height) {
-        BufferedImage image = this.getSkinHead(username);
-        return image == null ? null : convertToFxImage(scaleImage(image, width, height));
     }
 
     private static BufferedImage scaleImage(BufferedImage origImage, int width, int height) {
@@ -95,14 +53,14 @@ public class SkinManager {
             java.awt.Image resized = origImage.getScaledInstance(width, height, 2);
             BufferedImage image = new BufferedImage(width, height, 3);
             Graphics2D graphics2D = image.createGraphics();
-            graphics2D.drawImage(resized, 0, 0, (ImageObserver) null);
+            graphics2D.drawImage(resized, 0, 0, null);
             graphics2D.dispose();
             return image;
         }
     }
 
     private static BufferedImage downloadSkin(URL url) {
-        HttpURLConnection connection = null;
+        HttpURLConnection connection;
 
         try {
             connection = (HttpURLConnection) url.openConnection();
@@ -129,9 +87,7 @@ public class SkinManager {
                     throw var6;
                 }
 
-                if (input != null) {
-                    input.close();
-                }
+                input.close();
 
                 return var3;
             } catch (FileNotFoundException var7) {
@@ -156,7 +112,7 @@ public class SkinManager {
         int size = 8 * renderScale;
         int x_offset = 40 * renderScale;
         int y_offset = 8 * renderScale;
-        LogHelper.debug("ShinHead debug: W: %d Scale: %d Offset: %d", new Object[]{width, renderScale, size});
+        LogHelper.debug("ShinHead debug: W: %d Scale: %d Offset: %d", width, renderScale, size);
         return image.getSubimage(x_offset, y_offset, size, size);
     }
 
@@ -164,7 +120,7 @@ public class SkinManager {
         int width = image.getWidth();
         int renderScale = width / 64;
         int offset = 8 * renderScale;
-        LogHelper.debug("ShinHead debug: W: %d Scale: %d Offset: %d", new Object[]{width, renderScale, offset});
+        LogHelper.debug("ShinHead debug: W: %d Scale: %d Offset: %d", width, renderScale, offset);
         return image.getSubimage(offset, offset, offset, offset);
     }
 
@@ -173,7 +129,7 @@ public class SkinManager {
             return null;
         } else {
             try {
-                return SwingFXUtils.toFXImage(image, (WritableImage) null);
+                return SwingFXUtils.toFXImage(image, null);
             } catch (Throwable var2) {
                 if (LogHelper.isDebugEnabled()) {
                     LogHelper.error(var2);
@@ -191,7 +147,7 @@ public class SkinManager {
             default:
                 BufferedImage converted = new BufferedImage(bw, bh, 3);
                 Graphics2D graphics2D = converted.createGraphics();
-                graphics2D.drawImage(image, 0, 0, (ImageObserver) null);
+                graphics2D.drawImage(image, 0, 0, null);
                 graphics2D.dispose();
                 image = converted;
             case 2:
@@ -203,6 +159,50 @@ public class SkinManager {
                 writableImage.getPixelWriter().setPixels(0, 0, bw, bh, pf, raster.getData(), raster.getOffset(), scan);
                 return writableImage;
         }
+    }
+
+    public void addSkin(String username, URL url) {
+        this.map.put(username, new SkinEntry(url));
+    }
+
+    public BufferedImage getSkin(String username) {
+        SkinEntry entry = this.map.get(username);
+        return entry == null ? null : entry.getFullImage();
+    }
+
+    public BufferedImage getSkinHead(String username) {
+        SkinEntry entry = this.map.get(username);
+        return entry == null ? null : entry.getHeadImage();
+    }
+
+    public Image getFxSkin(String username) {
+        SkinEntry entry = this.map.get(username);
+        return entry == null ? null : entry.getFullFxImage();
+    }
+
+    public Image getFxSkinHead(String username) {
+        SkinEntry entry = this.map.get(username);
+        return entry == null ? null : entry.getHeadFxImage();
+    }
+
+    public BufferedImage getScaledSkin(String username, int width, int height) {
+        BufferedImage image = this.getSkin(username);
+        return scaleImage(image, width, height);
+    }
+
+    public BufferedImage getScaledSkinHead(String username, int width, int height) {
+        BufferedImage image = this.getSkinHead(username);
+        return scaleImage(image, width, height);
+    }
+
+    public Image getScaledFxSkin(String username, int width, int height) {
+        BufferedImage image = this.getSkin(username);
+        return convertToFxImage(scaleImage(image, width, height));
+    }
+
+    public Image getScaledFxSkinHead(String username, int width, int height) {
+        BufferedImage image = this.getSkinHead(username);
+        return image == null ? null : convertToFxImage(scaleImage(image, width, height));
     }
 
     private static class SkinEntry {
@@ -229,7 +229,7 @@ public class SkinManager {
                 this.imageRef = new SoftReference<>(result);
             }
 
-            return (BufferedImage) result.orElse(null);
+            return result.orElse(null);
         }
 
         synchronized Image getFullFxImage() {
@@ -244,7 +244,7 @@ public class SkinManager {
                 this.fxImageRef = new SoftReference<>(result);
             }
 
-            return (Image) result.orElse(null);
+            return result.orElse(null);
         }
 
         synchronized BufferedImage getHeadImage() {
@@ -259,7 +259,7 @@ public class SkinManager {
                 this.avatarRef = new SoftReference<>(result);
             }
 
-            return (BufferedImage) result.orElse(null);
+            return result.orElse(null);
         }
 
         synchronized Image getHeadFxImage() {
@@ -274,7 +274,7 @@ public class SkinManager {
                 this.fxAvatarRef = new SoftReference<>(result);
             }
 
-            return (Image) result.orElse(null);
+            return result.orElse(null);
         }
     }
 }

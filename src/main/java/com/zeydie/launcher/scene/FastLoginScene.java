@@ -21,6 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public final class FastLoginScene extends AbstractScene {
+    private final Timer timer = new Timer();
     private AccountScroll accountsScroll;
     private Button addAccountButton;
     private Button authButton;
@@ -29,8 +30,6 @@ public final class FastLoginScene extends AbstractScene {
     @Getter
     @Nullable
     private AccountsConfig.Account selectedAccount;
-
-    private final Timer timer = new Timer();
     private int scene = 1;
 
     public FastLoginScene(@NotNull final JavaFXApplication application) {

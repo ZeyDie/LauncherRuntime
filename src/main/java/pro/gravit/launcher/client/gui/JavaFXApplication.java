@@ -46,7 +46,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -60,6 +59,7 @@ public class JavaFXApplication extends Application {
     private static final AtomicReference<JavaFXApplication> INSTANCE = new AtomicReference<>();
     private static final AtomicBoolean IS_NOGUI = new AtomicBoolean(false);
     private static Path runtimeDirectory = null;
+    private static Path enfsDirectory;
     public final LauncherConfig config = Launcher.getConfig();
     public final ExecutorService workers = Executors.newWorkStealingPool(4);
     public RuntimeSettings runtimeSettings;
@@ -79,7 +79,6 @@ public class JavaFXApplication extends Application {
     private PrimaryStage mainStage;
     private boolean debugMode;
     private ResourceBundle resources;
-    private static Path enfsDirectory;
     private CommandCategory runtimeCategory;
 
     public JavaFXApplication() {
@@ -87,7 +86,28 @@ public class JavaFXApplication extends Application {
     }
 
     public static JavaFXApplication getInstance() {
-        return (JavaFXApplication) INSTANCE.get();
+        return INSTANCE.get();
+    }
+
+    public static URL getResourceURL(String name) throws IOException {
+        if (runtimeDirectory != null) {
+            Path target = runtimeDirectory.resolve(name);
+            if (!Files.exists(target)) {
+                throw new FileNotFoundException(String.format("File runtime/%s not found", name));
+            } else {
+                return target.toUri().toURL();
+            }
+        } else {
+            return enfsDirectory != null ? getResourceEnFs(name) : Launcher.getResourceURL(name);
+        }
+    }
+
+    private static URL getResourceEnFs(String name) throws IOException {
+        return EnFSHelper.getURL(enfsDirectory.resolve(name).toString().replaceAll("\\\\", "/"));
+    }
+
+    public static void setNoGUIMode(boolean isNogui) {
+        IS_NOGUI.set(isNogui);
     }
 
     public AbstractScene getCurrentScene() {
@@ -137,7 +157,7 @@ public class JavaFXApplication extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         try {
             Class.forName("pro.gravit.launcher.debug.DebugMain", false, JavaFXApplication.class.getClassLoader());
             if (DebugMain.IS_DEBUG.get()) {
@@ -279,23 +299,6 @@ public class JavaFXApplication extends Application {
         return IOHelper.newInput(getResourceURL(name));
     }
 
-    public static URL getResourceURL(String name) throws IOException {
-        if (runtimeDirectory != null) {
-            Path target = runtimeDirectory.resolve(name);
-            if (!Files.exists(target, new LinkOption[0])) {
-                throw new FileNotFoundException(String.format("File runtime/%s not found", name));
-            } else {
-                return target.toUri().toURL();
-            }
-        } else {
-            return enfsDirectory != null ? getResourceEnFs(name) : Launcher.getResourceURL(name);
-        }
-    }
-
-    private static URL getResourceEnFs(String name) throws IOException {
-        return EnFSHelper.getURL(enfsDirectory.resolve(name).toString().replaceAll("\\\\", "/"));
-    }
-
     public URL tryResource(String name) {
         try {
             return getResourceURL(name);
@@ -313,7 +316,7 @@ public class JavaFXApplication extends Application {
             throw new NullPointerException("ClientProfile not selected");
         } else {
             UUID uuid = profile.getUUID();
-            RuntimeSettings.ProfileSettings settings = (RuntimeSettings.ProfileSettings) this.runtimeSettings.profileSettings.get(uuid);
+            RuntimeSettings.ProfileSettings settings = this.runtimeSettings.profileSettings.get(uuid);
             if (settings == null) {
                 settings = ProfileSettings.getDefault(this.javaService, profile);
                 this.runtimeSettings.profileSettings.put(uuid, settings);
@@ -321,10 +324,6 @@ public class JavaFXApplication extends Application {
 
             return settings;
         }
-    }
-
-    public static void setNoGUIMode(boolean isNogui) {
-        IS_NOGUI.set(isNogui);
     }
 
     public void setMainScene(AbstractScene scene) throws Exception {

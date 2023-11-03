@@ -1,7 +1,6 @@
 package pro.gravit.launcher.client.gui.impl;
 
 import com.zeydie.launcher.scene.FastLoginScene;
-import javafx.scene.Scene;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.overlays.AbstractOverlay;
 import pro.gravit.launcher.client.gui.overlays.ProcessingOverlay;
@@ -47,15 +46,15 @@ public class GuiObjectsContainer {
     }
 
     public void init() {
-        this.loginScene = (LoginScene)this.registerScene(LoginScene.class);
-        this.processingOverlay = (ProcessingOverlay)this.registerOverlay(ProcessingOverlay.class);
-        this.serverMenuScene = (ServerMenuScene)this.registerScene(ServerMenuScene.class);
-        this.serverInfoScene = (ServerInfoScene)this.registerScene(ServerInfoScene.class);
-        this.optionsScene = (OptionsScene)this.registerScene(OptionsScene.class);
-        this.settingsScene = (SettingsScene)this.registerScene(SettingsScene.class);
-        this.consoleScene = (ConsoleScene)this.registerScene(ConsoleScene.class);
-        this.updateScene = (UpdateScene)this.registerScene(UpdateScene.class);
-        this.debugScene = (DebugScene)this.registerScene(DebugScene.class);
+        this.loginScene = this.registerScene(LoginScene.class);
+        this.processingOverlay = this.registerOverlay(ProcessingOverlay.class);
+        this.serverMenuScene = this.registerScene(ServerMenuScene.class);
+        this.serverInfoScene = this.registerScene(ServerInfoScene.class);
+        this.optionsScene = this.registerScene(OptionsScene.class);
+        this.settingsScene = this.registerScene(SettingsScene.class);
+        this.consoleScene = this.registerScene(ConsoleScene.class);
+        this.updateScene = this.registerScene(UpdateScene.class);
+        this.debugScene = this.registerScene(DebugScene.class);
 
         //TODO ZeyCodeStart
         this.fastLoginScene = this.registerScene(FastLoginScene.class);
@@ -65,15 +64,13 @@ public class GuiObjectsContainer {
     public void reload() throws Exception {
         Class<? extends AbstractScene> scene = this.application.getCurrentScene().getClass();
         ContextHelper.runInFxThreadStatic(() -> {
-            this.application.getMainStage().stage.setScene((Scene)null);
+            this.application.getMainStage().stage.setScene(null);
             this.application.resetDirectory();
             this.overlays.clear();
             this.scenes.clear();
             this.init();
-            Iterator<AbstractScene> var2 = this.scenes.iterator();
 
-            while(var2.hasNext()) {
-                AbstractScene s = (AbstractScene)var2.next();
+            for (AbstractScene s : this.scenes) {
                 if (s.getClass() == scene) {
                     this.application.getMainStage().setScene(s);
                 }
@@ -91,8 +88,8 @@ public class GuiObjectsContainer {
                 return null;
             }
 
-            scene = (AbstractScene)var2.next();
-        } while(!name.equals(scene.getName()));
+            scene = var2.next();
+        } while (!name.equals(scene.getName()));
 
         return scene;
     }
@@ -106,8 +103,8 @@ public class GuiObjectsContainer {
                 return null;
             }
 
-            overlay = (AbstractOverlay)var2.next();
-        } while(!name.equals(overlay.getName()));
+            overlay = var2.next();
+        } while (!name.equals(overlay.getName()));
 
         return overlay;
     }

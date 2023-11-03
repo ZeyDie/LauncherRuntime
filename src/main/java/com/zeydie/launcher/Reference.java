@@ -1,6 +1,7 @@
 package com.zeydie.launcher;
 
 import javafx.scene.image.ImageView;
+import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -65,12 +66,10 @@ public final class Reference {
 
         connection.setRequestMethod("GET");
 
-        try (
-                @NotNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
-                @NotNull final BufferedReader reader = new BufferedReader(inputStreamReader)
-        ) {
-            return Integer.parseInt(reader.readLine());
-        }
+        @Cleanup @NotNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
+        @Cleanup @NotNull final BufferedReader reader = new BufferedReader(inputStreamReader);
+
+        return Integer.parseInt(reader.readLine());
     }
 
     @SneakyThrows
@@ -80,14 +79,11 @@ public final class Reference {
 
         connection.setRequestMethod("GET");
 
-        try (
-                @NotNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
-                @NotNull final BufferedReader reader = new BufferedReader(inputStreamReader)
-        ) {
-            @Nullable final String uuid = reader.readLine();
+        @Cleanup @NotNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
+        @Cleanup @NotNull final BufferedReader reader = new BufferedReader(inputStreamReader);
+        @Nullable final String uuid = reader.readLine();
 
-            return (uuid == null || uuid.isEmpty()) ? UUID.randomUUID() : UUID.fromString(uuid);
-        }
+        return (uuid == null || uuid.isEmpty()) ? UUID.randomUUID() : UUID.fromString(uuid);
     }
 
     public static boolean isPlayerServer(final int serverId) {
@@ -110,11 +106,9 @@ public final class Reference {
 
         connection.setRequestMethod("GET");
 
-        try (
-                @NotNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
-                @NotNull final BufferedReader reader = new BufferedReader(inputStreamReader)
-        ) {
-            return reader.readLine();
-        }
+        @Cleanup @NotNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
+        @Cleanup @NotNull final BufferedReader reader = new BufferedReader(inputStreamReader);
+
+        return reader.readLine();
     }
 }

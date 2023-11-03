@@ -32,16 +32,20 @@ import java.util.function.Consumer;
 
 public abstract class AbstractScene extends AbstractVisualComponent {
     protected final LauncherConfig launcherConfig = Launcher.getConfig();
+    private final AtomicInteger enabled = new AtomicInteger(0);
     protected Scene scene;
     protected Pane header;
     protected Pane disablePane;
     private volatile Node currentOverlayNode;
     private volatile AbstractOverlay currentOverlay;
-    private AtomicInteger enabled = new AtomicInteger(0);
     private volatile boolean hideTransformStarted = false;
 
     protected AbstractScene(String fxmlPath, JavaFXApplication application) {
         super(fxmlPath, application);
+    }
+
+    public static void runLater(double delay, EventHandler<ActionEvent> callback) {
+        fade(null, delay, 0.0, 1.0, callback);
     }
 
     protected AbstractStage getCurrentStage() {
@@ -96,9 +100,7 @@ public abstract class AbstractScene extends AbstractVisualComponent {
         if (this.currentOverlayNode != null) {
             if (this.currentOverlay != null) {
                 if (this.hideTransformStarted && onFinished != null) {
-                    this.contextHelper.runInFxThread(() -> {
-                        onFinished.handle(null);
-                    });
+                    this.contextHelper.runInFxThread(() -> onFinished.handle(null));
                 }
 
                 this.hideTransformStarted = true;
@@ -128,9 +130,7 @@ public abstract class AbstractScene extends AbstractVisualComponent {
             throw new IllegalStateException("Try swap null overlay");
         } else {
             if (this.hideTransformStarted && onFinished != null) {
-                this.contextHelper.runInFxThread(() -> {
-                    onFinished.handle(null);
-                });
+                this.contextHelper.runInFxThread(() -> onFinished.handle(null));
             }
 
             this.hideTransformStarted = true;
@@ -172,7 +172,7 @@ public abstract class AbstractScene extends AbstractVisualComponent {
 
     @Override
     public void disable() {
-        LogHelper.debug("Scene %s disabled (%d)", new Object[]{this.getName(), this.enabled.incrementAndGet()});
+        LogHelper.debug("Scene %s disabled (%d)", this.getName(), this.enabled.incrementAndGet());
         if (this.enabled.get() == 1) {
             Pane root = (Pane) this.scene.getRoot();
             if (this.layout == root) {
@@ -194,7 +194,7 @@ public abstract class AbstractScene extends AbstractVisualComponent {
 
     @Override
     public void enable() {
-        LogHelper.debug("Scene %s enabled (%d)", new Object[]{this.getName(), this.enabled.decrementAndGet()});
+        LogHelper.debug("Scene %s enabled (%d)", this.getName(), this.enabled.decrementAndGet());
         if (this.enabled.get() == 0) {
             this.layout.setEffect(new GaussianBlur(0.0));
             this.disablePane.setVisible(false);
@@ -214,28 +214,12 @@ public abstract class AbstractScene extends AbstractVisualComponent {
 
     private void sceneBaseInit() {
         if (this.header == null) {
-            LogHelper.warning("Scene %s header button(#close, #hide) deprecated", new Object[]{this.getName()});
-            LookupHelper.lookupIfPossible(this.layout, new String[]{"#close"}).ifPresent((b) -> {
-                ((Button) b).setOnAction((e) -> {
-                    this.currentStage.close();
-                });
-            });
-            LookupHelper.lookupIfPossible(this.layout, new String[]{"#hide"}).ifPresent((b) -> {
-                ((Button) b).setOnAction((e) -> {
-                    this.currentStage.hide();
-                });
-            });
+            LogHelper.warning("Scene %s header button(#close, #hide) deprecated", this.getName());
+            LookupHelper.lookupIfPossible(this.layout, new String[]{"#close"}).ifPresent((b) -> ((Button) b).setOnAction((e) -> this.currentStage.close()));
+            LookupHelper.lookupIfPossible(this.layout, new String[]{"#hide"}).ifPresent((b) -> ((Button) b).setOnAction((e) -> this.currentStage.hide()));
         } else {
-            LookupHelper.lookupIfPossible(this.header, new String[]{"#controls", "#exit"}).ifPresent((b) -> {
-                ((Button) b).setOnAction((e) -> {
-                    this.currentStage.close();
-                });
-            });
-            LookupHelper.lookupIfPossible(this.header, new String[]{"#controls", "#minimize"}).ifPresent((b) -> {
-                ((Button) b).setOnAction((e) -> {
-                    this.currentStage.hide();
-                });
-            });
+            LookupHelper.lookupIfPossible(this.header, new String[]{"#controls", "#exit"}).ifPresent((b) -> ((Button) b).setOnAction((e) -> this.currentStage.close()));
+            LookupHelper.lookupIfPossible(this.header, new String[]{"#controls", "#minimize"}).ifPresent((b) -> ((Button) b).setOnAction((e) -> this.currentStage.hide()));
             LookupHelper.lookupIfPossible(this.header, new String[]{"#controls", "#lang"}).ifPresent((b) -> {
                 ((Button) b).setContextMenu(this.makeLangContextMenu());
                 b.setOnMousePressed((e) -> {
@@ -244,12 +228,8 @@ public abstract class AbstractScene extends AbstractVisualComponent {
                     }
                 });
             });
-            LookupHelper.lookupIfPossible(this.header, new String[]{"#controls", "#deauth"}).ifPresent((b) -> {
-                ((Button) b).setOnAction((e) -> {
-                    this.application.messageManager.showApplyDialog(this.application.getTranslation("runtime.scenes.settings.exitDialog.header"), this.application.getTranslation("runtime.scenes.settings.exitDialog.description"), this::userExit, () -> {
-                    }, true);
-                });
-            });
+            LookupHelper.lookupIfPossible(this.header, new String[]{"#controls", "#deauth"}).ifPresent((b) -> ((Button) b).setOnAction((e) -> this.application.messageManager.showApplyDialog(this.application.getTranslation("runtime.scenes.settings.exitDialog.header"), this.application.getTranslation("runtime.scenes.settings.exitDialog.description"), this::userExit, () -> {
+            }, true)));
         }
 
         this.currentStage.enableMouseDrag(this.layout);
@@ -261,8 +241,7 @@ public abstract class AbstractScene extends AbstractVisualComponent {
         RuntimeSettings.LAUNCHER_LOCALE[] var2 = LAUNCHER_LOCALE.values();
         int var3 = var2.length;
 
-        for (int var4 = 0; var4 < var3; ++var4) {
-            RuntimeSettings.LAUNCHER_LOCALE locale = var2[var4];
+        for (LAUNCHER_LOCALE locale : var2) {
             MenuItem item = new MenuItem(locale.displayName);
             item.setOnAction((e) -> {
                 try {
@@ -281,28 +260,26 @@ public abstract class AbstractScene extends AbstractVisualComponent {
     }
 
     protected void userExit() {
-        this.processRequest(this.application.getTranslation("runtime.scenes.settings.exitDialog.processing"), new ExitRequest(), (event) -> {
-            ContextHelper.runInFxThreadStatic(() -> {
-                this.hideOverlay(0.0, null);
+        this.processRequest(this.application.getTranslation("runtime.scenes.settings.exitDialog.processing"), new ExitRequest(), (event) -> ContextHelper.runInFxThreadStatic(() -> {
+            this.hideOverlay(0.0, null);
 
-                //TODO ZeyCodeStart
-                this.application.gui.fastLoginScene.reset();
-                //TODO ZeyCodeEnd
-                //TODO ZeyCodeClear
-                /*this.application.gui.loginScene.clearPassword();
-                this.application.gui.loginScene.reset();*/
+            //TODO ZeyCodeStart
+            this.application.gui.fastLoginScene.reset();
+            //TODO ZeyCodeEnd
+            //TODO ZeyCodeClear
+            /*this.application.gui.loginScene.clearPassword();
+            this.application.gui.loginScene.reset();*/
 
-                try {
-                    this.application.saveSettings();
-                    this.application.stateService.exit();
-                    //TODO ZeyCodeReplace loginScene on fastLoginScene
-                    this.switchScene(this.application.gui.fastLoginScene);
-                } catch (Exception var2) {
-                    this.errorHandle(var2);
-                }
+            try {
+                this.application.saveSettings();
+                this.application.stateService.exit();
+                //TODO ZeyCodeReplace loginScene on fastLoginScene
+                this.switchScene(this.application.gui.fastLoginScene);
+            } catch (Exception var2) {
+                this.errorHandle(var2);
+            }
 
-            });
-        }, (event) -> {
+        }), (event) -> {
         });
     }
 
@@ -317,9 +294,5 @@ public abstract class AbstractScene extends AbstractVisualComponent {
 
     public Node getHeader() {
         return this.header;
-    }
-
-    public static void runLater(double delay, EventHandler<ActionEvent> callback) {
-        fade((Node) null, delay, 0.0, 1.0, callback);
     }
 }

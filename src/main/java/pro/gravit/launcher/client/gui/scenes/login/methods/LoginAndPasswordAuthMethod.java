@@ -1,10 +1,7 @@
 package pro.gravit.launcher.client.gui.scenes.login.methods;
 
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 import org.jetbrains.annotations.NotNull;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.helper.LookupHelper;
@@ -24,7 +21,7 @@ public class LoginAndPasswordAuthMethod extends AbstractAuthMethod<AuthPasswordD
     public LoginAndPasswordAuthMethod(LoginScene.LoginSceneAccessor accessor) {
         this.accessor = accessor;
         this.application = accessor.getApplication();
-        this.overlay = (LoginAndPasswordOverlay) this.application.gui.registerOverlay(LoginAndPasswordOverlay.class);
+        this.overlay = this.application.gui.registerOverlay(LoginAndPasswordOverlay.class);
         this.overlay.accessor = accessor;
     }
 
@@ -42,9 +39,7 @@ public class LoginAndPasswordAuthMethod extends AbstractAuthMethod<AuthPasswordD
         CompletableFuture<Void> future = new CompletableFuture<>();
 
         try {
-            this.accessor.showOverlay(this.overlay, (e) -> {
-                future.complete(null);
-            });
+            this.accessor.showOverlay(this.overlay, (e) -> future.complete(null));
         } catch (Exception var4) {
             this.accessor.errorHandle(var4);
         }
@@ -67,9 +62,7 @@ public class LoginAndPasswordAuthMethod extends AbstractAuthMethod<AuthPasswordD
     @Override
     public CompletableFuture<Void> hide() {
         CompletableFuture<Void> future = new CompletableFuture<>();
-        this.accessor.hideOverlay(0.0, (e) -> {
-            future.complete(null);
-        });
+        this.accessor.hideOverlay(0.0, (e) -> future.complete(null));
         return future;
     }
 
@@ -97,9 +90,9 @@ public class LoginAndPasswordAuthMethod extends AbstractAuthMethod<AuthPasswordD
 
         @Override
         protected void doInit() {
-            this.login = (TextField) LookupHelper.lookup(this.layout, new String[]{"#login"});
-            this.password = (TextField) LookupHelper.lookup(this.layout, new String[]{"#password"});
-            this.authButton = new LoginAuthButtonComponent((Pane) LookupHelper.lookup(this.layout, new String[]{"#authButtonBlock"}), this.application, (e) -> {
+            this.login = LookupHelper.lookup(this.layout, new String[]{"#login"});
+            this.password = LookupHelper.lookup(this.layout, new String[]{"#password"});
+            this.authButton = new LoginAuthButtonComponent(LookupHelper.lookup(this.layout, new String[]{"#authButtonBlock"}), this.application, (e) -> {
                 String rawLogin = this.login.getText();
                 String rawPassword = this.password.getText();
                 this.future.complete(new LoginScene.LoginAndPasswordResult(rawLogin, this.accessor.getAuthService().makePassword(rawPassword)));
@@ -118,24 +111,16 @@ public class LoginAndPasswordAuthMethod extends AbstractAuthMethod<AuthPasswordD
                 }
                 //TODO ZeyCodeStart
             });
-            this.login.textProperty().addListener((l) -> {
-                this.authButton.setActive(!this.login.getText().isEmpty());
-            });
+            this.login.textProperty().addListener((l) -> this.authButton.setActive(!this.login.getText().isEmpty()));
             if (this.application.guiModuleConfig.createAccountURL != null) {
-                ((Text) LookupHelper.lookup(this.layout, new String[]{"#createAccount"})).setOnMouseClicked((e) -> {
-                    this.application.openURL(this.application.guiModuleConfig.createAccountURL);
-                });
+                LookupHelper.lookup(this.layout, "#createAccount").setOnMouseClicked((e) -> this.application.openURL(this.application.guiModuleConfig.createAccountURL));
             }
 
             if (this.application.guiModuleConfig.forgotPassURL != null) {
-                ((Text) LookupHelper.lookup(this.layout, new String[]{"#forgotPass"})).setOnMouseClicked((e) -> {
-                    this.application.openURL(this.application.guiModuleConfig.forgotPassURL);
-                });
+                LookupHelper.lookup(this.layout, "#forgotPass").setOnMouseClicked((e) -> this.application.openURL(this.application.guiModuleConfig.forgotPassURL));
             }
 
-            ((Button) LookupHelper.lookup(this.layout, new String[]{"#regButton000"})).setOnMouseClicked((e) -> {
-                this.application.openURL(this.application.guiModuleConfig.createAccountURL);
-            });
+            LookupHelper.lookup(this.layout, "#regButton000").setOnMouseClicked((e) -> this.application.openURL(this.application.guiModuleConfig.createAccountURL));
             if (this.application.runtimeSettings.login != null) {
                 this.login.setText(this.application.runtimeSettings.login);
                 this.authButton.setActive(true);
@@ -153,7 +138,7 @@ public class LoginAndPasswordAuthMethod extends AbstractAuthMethod<AuthPasswordD
         @Override
         public void reset() {
             if (this.password != null) {
-                this.password.getStyleClass().removeAll(new String[]{"hasSaved"});
+                this.password.getStyleClass().removeAll("hasSaved");
                 this.password.setPromptText(this.application.getTranslation("runtime.scenes.login.password"));
                 this.password.setText("");
                 this.login.setText("");

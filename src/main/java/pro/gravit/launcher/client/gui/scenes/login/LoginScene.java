@@ -13,7 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import pro.gravit.launcher.LauncherEngine;
 import pro.gravit.launcher.client.StdJavaRuntimeProvider;
 import pro.gravit.launcher.client.events.ClientExitPhase;
@@ -26,7 +25,6 @@ import pro.gravit.launcher.client.gui.service.AuthService;
 import pro.gravit.launcher.events.request.AuthRequestEvent;
 import pro.gravit.launcher.events.request.GetAvailabilityAuthRequestEvent;
 import pro.gravit.launcher.profiles.ClientProfile;
-import pro.gravit.launcher.profiles.Texture;
 import pro.gravit.launcher.request.Request;
 import pro.gravit.launcher.request.RequestException;
 import pro.gravit.launcher.request.WebSocketEvent;
@@ -52,6 +50,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class LoginScene extends AbstractScene {
+    private final AuthService authService;
+    private final AuthFlow authFlow;
     public Map<Class<? extends GetAvailabilityAuthRequestEvent.AuthAvailabilityDetails>, AbstractAuthMethod<? extends GetAvailabilityAuthRequestEvent.AuthAvailabilityDetails>> authMethods = new HashMap<>(8);
     public boolean isLoginStarted;
     //TODO ZeyCodeModified from private to public
@@ -60,11 +60,9 @@ public class LoginScene extends AbstractScene {
     /*private CheckBox savePasswordCheckBox;
     private CheckBox autoenter;*/
     private LoginAuthButtonComponent authButton;
-    private final AuthService authService;
     private VBox authList;
     private ToggleGroup authToggleGroup;
     private GetAvailabilityAuthRequestEvent.AuthAvailability authAvailability;
-    private final AuthFlow authFlow;
     private volatile boolean processingEnabled;
 
     public LoginScene(JavaFXApplication application) {
@@ -81,9 +79,7 @@ public class LoginScene extends AbstractScene {
 
     @Override
     public void doInit() {
-        this.authButton = new LoginAuthButtonComponent((Pane) LookupHelper.lookup(this.layout, new String[]{"#authButtonBlock"}), this.application, (e) -> {
-            this.contextHelper.runCallback(this::loginWithGui);
-        });
+        this.authButton = new LoginAuthButtonComponent(LookupHelper.lookup(this.layout, new String[]{"#authButtonBlock"}), this.application, (e) -> this.contextHelper.runCallback(this::loginWithGui));
         //TODO ZeyCodeStart
         this.application.runtimeSettings.autoAuth = true;
         //TODO ZeyCodeEnd
@@ -99,22 +95,16 @@ public class LoginScene extends AbstractScene {
             this.application.runtimeSettings.autoAuth = this.autoenter.isSelected();
         });*/
         if (this.application.guiModuleConfig.createAccountURL != null) {
-            ((Text) LookupHelper.lookup(this.header, new String[]{"#controls", "#registerPane", "#createAccount"})).setOnMouseClicked((e) -> {
-                this.application.openURL(this.application.guiModuleConfig.createAccountURL);
-            });
+            LookupHelper.lookup(this.header, "#controls", "#registerPane", "#createAccount").setOnMouseClicked((e) -> this.application.openURL(this.application.guiModuleConfig.createAccountURL));
         }
 
         if (this.application.guiModuleConfig.forgotPassURL != null) {
-            ((Text) LookupHelper.lookup(this.header, new String[]{"#controls", "#links", "#forgotPass"})).setOnMouseClicked((e) -> {
-                this.application.openURL(this.application.guiModuleConfig.forgotPassURL);
-            });
+            LookupHelper.lookup(this.header, "#controls", "#links", "#forgotPass").setOnMouseClicked((e) -> this.application.openURL(this.application.guiModuleConfig.forgotPassURL));
         }
 
-        this.authList = (VBox) LookupHelper.lookup(this.layout, new String[]{"#authList"});
+        this.authList = LookupHelper.lookup(this.layout, new String[]{"#authList"});
         this.authToggleGroup = new ToggleGroup();
-        this.authMethods.forEach((k, v) -> {
-            v.prepare();
-        });
+        this.authMethods.forEach((k, v) -> v.prepare());
         if (!this.application.isDebugMode()) {
             this.launcherRequest();
         } else {
@@ -139,9 +129,7 @@ public class LoginScene extends AbstractScene {
                     Platform.exit();
                     return;
                 } catch (Throwable var5) {
-                    this.contextHelper.runInFxThread(() -> {
-                        this.errorHandle(var5);
-                    });
+                    this.contextHelper.runInFxThread(() -> this.errorHandle(var5));
 
                     try {
                         Thread.sleep(1500L);
@@ -155,48 +143,42 @@ public class LoginScene extends AbstractScene {
 
             LogHelper.dev("Launcher update processed");
             this.getAvailabilityAuth();
-        }, (event) -> {
-            LauncherEngine.exitLauncher(0);
-        });
+        }, (event) -> LauncherEngine.exitLauncher(0));
     }
 
     private void getAvailabilityAuth() {
         GetAvailabilityAuthRequest getAvailabilityAuthRequest = new GetAvailabilityAuthRequest();
-        this.processRequest(this.application.getTranslation("runtime.overlay.processing.text.authAvailability"), getAvailabilityAuthRequest, (auth) -> {
-            this.contextHelper.runInFxThread(() -> {
-                this.auth = auth.list;
-                this.authList.setVisible(auth.list.size() != 1);
-                Iterator<GetAvailabilityAuthRequestEvent.AuthAvailability> var2 = auth.list.iterator();
+        this.processRequest(this.application.getTranslation("runtime.overlay.processing.text.authAvailability"), getAvailabilityAuthRequest, (auth) -> this.contextHelper.runInFxThread(() -> {
+            this.auth = auth.list;
+            this.authList.setVisible(auth.list.size() != 1);
+            Iterator<GetAvailabilityAuthRequestEvent.AuthAvailability> var2 = auth.list.iterator();
 
-                while (true) {
-                    GetAvailabilityAuthRequestEvent.AuthAvailability authAvailability;
-                    do {
-                        if (!var2.hasNext()) {
-                            if (this.authAvailability == null && auth.list.size() > 0) {
-                                this.changeAuthAvailability((GetAvailabilityAuthRequestEvent.AuthAvailability) auth.list.get(0));
-                            }
-
-                            this.hideOverlay(0.0, (event) -> {
-                                this.postInit();
-                            });
-                            return;
+            while (true) {
+                GetAvailabilityAuthRequestEvent.AuthAvailability authAvailability;
+                do {
+                    if (!var2.hasNext()) {
+                        if (this.authAvailability == null && auth.list.size() > 0) {
+                            this.changeAuthAvailability(auth.list.get(0));
                         }
 
-                        authAvailability = (GetAvailabilityAuthRequestEvent.AuthAvailability) var2.next();
-                    } while (!authAvailability.visible);
-
-                    if (this.application.runtimeSettings.lastAuth == null) {
-                        if (authAvailability.name.equals("std") || this.authAvailability == null) {
-                            this.changeAuthAvailability(authAvailability);
-                        }
-                    } else if (authAvailability.name.equals(this.application.runtimeSettings.lastAuth.name)) {
-                        this.changeAuthAvailability(authAvailability);
+                        this.hideOverlay(0.0, (event) -> this.postInit());
+                        return;
                     }
 
-                    this.addAuthAvailability(authAvailability);
+                    authAvailability = var2.next();
+                } while (!authAvailability.visible);
+
+                if (this.application.runtimeSettings.lastAuth == null) {
+                    if (authAvailability.name.equals("std") || this.authAvailability == null) {
+                        this.changeAuthAvailability(authAvailability);
+                    }
+                } else if (authAvailability.name.equals(this.application.runtimeSettings.lastAuth.name)) {
+                    this.changeAuthAvailability(authAvailability);
                 }
-            });
-        }, null);
+
+                this.addAuthAvailability(authAvailability);
+            }
+        }), null);
     }
 
     //TODO ZeyCodeModified from private to public
@@ -211,7 +193,7 @@ public class LoginScene extends AbstractScene {
         this.authAvailability = authAvailability;
         this.application.stateService.setAuthAvailability(authAvailability);
         this.authFlow.init(authAvailability);
-        LogHelper.info("Selected auth: %s", new Object[]{authAvailability.name});
+        LogHelper.info("Selected auth: %s", authAvailability.name);
     }
 
     public void addAuthAvailability(GetAvailabilityAuthRequestEvent.AuthAvailability authAvailability) {
@@ -223,17 +205,15 @@ public class LoginScene extends AbstractScene {
             radio.fire();
         }
 
-        radio.setOnAction((e) -> {
-            this.changeAuthAvailability(authAvailability);
-        });
-        LogHelper.info("Added %s: %s", new Object[]{authAvailability.name, authAvailability.displayName});
+        radio.setOnAction((e) -> this.changeAuthAvailability(authAvailability));
+        LogHelper.info("Added %s: %s", authAvailability.name, authAvailability.displayName);
         this.authList.getChildren().add(radio);
     }
 
     public <T extends WebSocketEvent> void processing(Request<T> request, String text, Consumer<T> onSuccess, Consumer<String> onError) {
         Pane root = (Pane) this.scene.getRoot();
         LookupHelper.Point2D authAbsPosition = LookupHelper.getAbsoluteCords(this.authButton.getLayout(), this.layout);
-        LogHelper.debug("X: %f, Y: %f", new Object[]{authAbsPosition.x, authAbsPosition.y});
+        LogHelper.debug("X: %f, Y: %f", authAbsPosition.x, authAbsPosition.y);
         double authLayoutX = this.authButton.getLayout().getLayoutX();
         double authLayoutY = this.authButton.getLayout().getLayoutY();
         String oldText = this.authButton.getText();
@@ -249,9 +229,7 @@ public class LoginScene extends AbstractScene {
             this.processingEnabled = true;
         }
 
-        this.contextHelper.runInFxThread(() -> {
-            this.authButton.setText(text);
-        });
+        this.contextHelper.runInFxThread(() -> this.authButton.setText(text));
         Runnable processingOff = () -> {
             if (this.processingEnabled) {
                 this.contextHelper.runInFxThread(() -> {
@@ -346,12 +324,8 @@ public class LoginScene extends AbstractScene {
     }
 
     private void loginWithOAuth(AuthOAuthPassword password, GetAvailabilityAuthRequestEvent.AuthAvailability authAvailability) {
-        AuthRequest authRequest = this.authService.makeAuthRequest((String) null, password, authAvailability.name);
-        this.processing(authRequest, this.application.getTranslation("runtime.overlay.processing.text.auth"), (result) -> {
-            this.contextHelper.runInFxThread(() -> {
-                this.onSuccessLogin(new SuccessAuth(result, (String) null, (AuthRequest.AuthPasswordInterface) null));
-            });
-        }, (error) -> {
+        AuthRequest authRequest = this.authService.makeAuthRequest(null, password, authAvailability.name);
+        this.processing(authRequest, this.application.getTranslation("runtime.overlay.processing.text.auth"), (result) -> this.contextHelper.runInFxThread(() -> this.onSuccessLogin(new SuccessAuth(result, null, null))), (error) -> {
             if (error.equals("auth.invalidtoken")) {
                 this.application.runtimeSettings.oauthAccessToken = null;
                 this.application.runtimeSettings.oauthRefreshToken = null;
@@ -371,11 +345,7 @@ public class LoginScene extends AbstractScene {
     private void loginWithGui() {
         this.authButton.unsetError();
         if (!this.tryOAuthLogin()) {
-            this.authFlow.start().thenAccept((result) -> {
-                this.contextHelper.runInFxThread(() -> {
-                    this.onSuccessLogin(result);
-                });
-            });
+            this.authFlow.start().thenAccept((result) -> this.contextHelper.runInFxThread(() -> this.onSuccessLogin(result)));
         }
     }
 
@@ -418,19 +388,17 @@ public class LoginScene extends AbstractScene {
 
         if (result.playerProfile != null && result.playerProfile.assets != null && result.playerProfile.assets.get("SKIN") != null) {
             try {
-                this.application.skinManager.addSkin(result.playerProfile.username, new URL(((Texture) result.playerProfile.assets.get("SKIN")).url));
+                this.application.skinManager.addSkin(result.playerProfile.username, new URL(result.playerProfile.assets.get("SKIN").url));
                 this.application.skinManager.getSkin(result.playerProfile.username);
-            } catch (Exception var5) {
+            } catch (Exception ignored) {
             }
         }
 
         this.contextHelper.runInFxThread(() -> {
-            Optional<Node> player = LookupHelper.lookupIfPossible(this.scene.getRoot(), new String[]{"#player"});
+            Optional<Node> player = LookupHelper.lookupIfPossible(this.scene.getRoot(), "#player");
             if (player.isPresent()) {
-                LookupHelper.lookupIfPossible((Node) player.get(), new String[]{"#playerName"}).ifPresent((e) -> {
-                    ((Label) e).setText(this.application.stateService.getUsername());
-                });
-                LookupHelper.lookupIfPossible((Node) player.get(), new String[]{"#playerHead"}).ifPresent((h) -> {
+                LookupHelper.lookupIfPossible(player.get(), new String[]{"#playerName"}).ifPresent((e) -> ((Label) e).setText(this.application.stateService.getUsername()));
+                LookupHelper.lookupIfPossible(player.get(), new String[]{"#playerHead"}).ifPresent((h) -> {
                     try {
                         ImageView imageView = (ImageView) h;
                         Rectangle clip = new Rectangle(imageView.getFitWidth(), imageView.getFitHeight());
@@ -446,12 +414,12 @@ public class LoginScene extends AbstractScene {
                     }
 
                 });
-                ((Node) player.get()).setVisible(true);
+                player.get().setVisible(true);
                 this.disable();
-                fade((Node) player.get(), 2000.0, 0.0, 1.0, (e) -> {
+                fade(player.get(), 2000.0, 0.0, 1.0, (e) -> {
                     this.enable();
                     this.onGetProfiles();
-                    ((Node) player.get()).setVisible(false);
+                    player.get().setVisible(false);
                 });
             } else {
                 this.onGetProfiles();
@@ -464,10 +432,8 @@ public class LoginScene extends AbstractScene {
         this.processing(new ProfilesRequest(), this.application.getTranslation("runtime.overlay.processing.text.profiles"), (profiles) -> {
             this.application.stateService.setProfilesResult(profiles);
             this.application.runtimeSettings.profiles = profiles.profiles;
-            Iterator<ClientProfile> var2 = profiles.profiles.iterator();
 
-            while (var2.hasNext()) {
-                ClientProfile profile = (ClientProfile) var2.next();
+            for (ClientProfile profile : profiles.profiles) {
                 this.application.triggerManager.process(profile, this.application.stateService.getOptionalView(profile));
             }
 
@@ -497,6 +463,28 @@ public class LoginScene extends AbstractScene {
         this.application.runtimeSettings.login = null;
         this.application.runtimeSettings.oauthAccessToken = null;
         this.application.runtimeSettings.oauthRefreshToken = null;
+    }
+
+    public static class SuccessAuth {
+        public AuthRequestEvent requestEvent;
+        public String recentLogin;
+        public AuthRequest.AuthPasswordInterface recentPassword;
+
+        public SuccessAuth(AuthRequestEvent requestEvent, String recentLogin, AuthRequest.AuthPasswordInterface recentPassword) {
+            this.requestEvent = requestEvent;
+            this.recentLogin = recentLogin;
+            this.recentPassword = recentPassword;
+        }
+    }
+
+    public static class LoginAndPasswordResult {
+        public final String login;
+        public final AuthRequest.AuthPasswordInterface password;
+
+        public LoginAndPasswordResult(String login, AuthRequest.AuthPasswordInterface password) {
+            this.login = login;
+            this.password = password;
+        }
     }
 
     public class AuthFlow {
@@ -562,9 +550,7 @@ public class LoginScene extends AbstractScene {
 
         private void start(CompletableFuture<SuccessAuth> result, String resentLogin, AuthRequest.AuthPasswordInterface resentPassword) {
             CompletableFuture<LoginAndPasswordResult> authFuture = this.tryLogin(resentLogin, resentPassword);
-            authFuture.thenAccept((e) -> {
-                this.login(e.login, e.password, this.authAvailability, result);
-            }).exceptionally((e) -> {
+            authFuture.thenAccept((e) -> this.login(e.login, e.password, this.authAvailability, result)).exceptionally((e) -> {
                 e = e.getCause();
                 this.reset();
                 LoginScene.this.isLoginStarted = false;
@@ -579,17 +565,15 @@ public class LoginScene extends AbstractScene {
 
         private CompletableFuture<SuccessAuth> start() {
             CompletableFuture<SuccessAuth> result = new CompletableFuture<>();
-            this.start(result, (String) null, (AuthRequest.AuthPasswordInterface) null);
+            this.start(result, null, null);
             return result;
         }
 
         private void login(String login, AuthRequest.AuthPasswordInterface password, GetAvailabilityAuthRequestEvent.AuthAvailability authId, CompletableFuture<SuccessAuth> result) {
             LoginScene.this.isLoginStarted = true;
-            LogHelper.dev("Auth with %s password ***** authId %s", new Object[]{login, authId});
+            LogHelper.dev("Auth with %s password ***** authId %s", login, authId);
             AuthRequest authRequest = LoginScene.this.authService.makeAuthRequest(login, password, authId.name);
-            LoginScene.this.processing(authRequest, LoginScene.this.application.getTranslation("runtime.overlay.processing.text.auth"), (event) -> {
-                result.complete(new SuccessAuth(event, login, password));
-            }, (error) -> {
+            LoginScene.this.processing(authRequest, LoginScene.this.application.getTranslation("runtime.overlay.processing.text.auth"), (event) -> result.complete(new SuccessAuth(event, login, password)), (error) -> {
                 if (error.equals("auth.invalidtoken")) {
                     LoginScene.this.application.runtimeSettings.oauthAccessToken = null;
                     LoginScene.this.application.runtimeSettings.oauthRefreshToken = null;
@@ -597,24 +581,18 @@ public class LoginScene extends AbstractScene {
                 } else if (error.equals("auth.require2fa")) {
                     this.authFlow.clear();
                     this.authFlow.add(1);
-                    LoginScene.this.contextHelper.runInFxThread(() -> {
-                        this.start(result, login, password);
-                    });
+                    LoginScene.this.contextHelper.runInFxThread(() -> this.start(result, login, password));
                 } else if (error.startsWith("auth.require.factor.")) {
                     List<Integer> newAuthFlow = new ArrayList<>();
                     String[] var6 = error.substring("auth.require.factor.".length() + 1).split("\\.");
-                    int var7 = var6.length;
 
-                    for (int var8 = 0; var8 < var7; ++var8) {
-                        String s = var6[var8];
+                    for (String s : var6) {
                         newAuthFlow.add(Integer.parseInt(s));
                     }
 
                     this.authFlow.clear();
                     this.authFlow.addAll(newAuthFlow);
-                    LoginScene.this.contextHelper.runInFxThread(() -> {
-                        this.start(result, login, password);
-                    });
+                    LoginScene.this.contextHelper.runInFxThread(() -> this.start(result, login, password));
                 } else {
                     this.authFlow.clear();
                     this.authFlow.add(0);
@@ -647,28 +625,6 @@ public class LoginScene extends AbstractScene {
 
         public void errorHandle(Throwable e) {
             LoginScene.this.errorHandle(e);
-        }
-    }
-
-    public static class SuccessAuth {
-        public AuthRequestEvent requestEvent;
-        public String recentLogin;
-        public AuthRequest.AuthPasswordInterface recentPassword;
-
-        public SuccessAuth(AuthRequestEvent requestEvent, String recentLogin, AuthRequest.AuthPasswordInterface recentPassword) {
-            this.requestEvent = requestEvent;
-            this.recentLogin = recentLogin;
-            this.recentPassword = recentPassword;
-        }
-    }
-
-    public static class LoginAndPasswordResult {
-        public final String login;
-        public final AuthRequest.AuthPasswordInterface password;
-
-        public LoginAndPasswordResult(String login, AuthRequest.AuthPasswordInterface password) {
-            this.login = login;
-            this.password = password;
         }
     }
 }
