@@ -1,11 +1,5 @@
 package pro.gravit.launcher.client.gui.impl;
 
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import com.zeydie.launcher.scene.FastLoginScene;
 import javafx.scene.Scene;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
@@ -22,6 +16,12 @@ import pro.gravit.launcher.client.gui.scenes.settings.SettingsScene;
 import pro.gravit.launcher.client.gui.scenes.update.UpdateScene;
 import pro.gravit.launcher.client.gui.stage.ConsoleStage;
 import pro.gravit.utils.helper.LogHelper;
+
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class GuiObjectsContainer {
     private final JavaFXApplication application;

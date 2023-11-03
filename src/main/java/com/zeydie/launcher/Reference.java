@@ -1,14 +1,12 @@
 package com.zeydie.launcher;
 
-import com.zeydie.launcher.config.AccountsConfig;
 import javafx.scene.image.ImageView;
-import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pro.gravit.launcher.client.DirBridge;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.SkinManager;
-import pro.gravit.launcher.client.gui.config.RuntimeSettings;
 import pro.gravit.launcher.client.gui.scenes.servermenu.ServerMenuScene;
 
 import java.io.BufferedReader;
@@ -16,8 +14,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public final class Reference {
@@ -30,12 +26,12 @@ public final class Reference {
     private static final String uuidUrl = "https://admin.minefite.net/fs/launcher-uuid.php?player=%s";
     private static final String serverNameUrl = "https://admin.minefite.net/fs/launcher-serverName.php?serverId=%d";
 
-    public static String getLoginOfRefreshToken(@NonNull final String token) {
+    public static String getLoginOfRefreshToken(@NotNull final String token) {
         return token.split("\\.")[0];
     }
 
-    public static ImageView getAvatar(@NonNull final String login) {
-        @NonNull final ImageView imageView = new ImageView();
+    public static ImageView getAvatar(@NotNull final String login) {
+        @NotNull final ImageView imageView = new ImageView();
 
         imageView.setFitHeight(35);
         imageView.setFitWidth(35);
@@ -55,38 +51,38 @@ public final class Reference {
     }
 
     @SneakyThrows
-    public static void cacheSkin(@NonNull final String login) {
-        @NonNull final SkinManager skinManager = JavaFXApplication.getInstance().skinManager;
+    public static void cacheSkin(@NotNull final String login) {
+        @NotNull final SkinManager skinManager = JavaFXApplication.getInstance().skinManager;
 
         skinManager.addSkin(login, new URL(String.format(skinUrl, login)));
         skinManager.getSkin(login);
     }
 
     @SneakyThrows
-    public static int getServerIdForUUID(@NonNull final UUID uuid) {
-        @NonNull final URL url = new URL(String.format(serverIdUrl, uuid));
-        @NonNull final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    public static int getServerIdForUUID(@NotNull final UUID uuid) {
+        @NotNull final URL url = new URL(String.format(serverIdUrl, uuid));
+        @NotNull final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("GET");
 
         try (
-                @NonNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
-                @NonNull final BufferedReader reader = new BufferedReader(inputStreamReader)
+                @NotNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
+                @NotNull final BufferedReader reader = new BufferedReader(inputStreamReader)
         ) {
             return Integer.parseInt(reader.readLine());
         }
     }
 
     @SneakyThrows
-    public static @NonNull UUID getUUIDForLogin(@NonNull final String login) {
-        @NonNull final URL url = new URL(String.format(uuidUrl, login));
-        @NonNull final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    public static @NotNull UUID getUUIDForLogin(@NotNull final String login) {
+        @NotNull final URL url = new URL(String.format(uuidUrl, login));
+        @NotNull final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("GET");
 
         try (
-                @NonNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
-                @NonNull final BufferedReader reader = new BufferedReader(inputStreamReader)
+                @NotNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
+                @NotNull final BufferedReader reader = new BufferedReader(inputStreamReader)
         ) {
             @Nullable final String uuid = reader.readLine();
 
@@ -96,11 +92,11 @@ public final class Reference {
 
     public static boolean isPlayerServer(final int serverId) {
         return true;
-        /*@NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
-        @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
+        /*@NotNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
+        @NotNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
 
-        @NonNull final List<AccountsConfig.Account> accountList = Accounts.getAccountsConfig().getAccounts();
-        @NonNull final Optional<AccountsConfig.Account> filtered = accountList.stream()
+        @NotNull final List<AccountsConfig.Account> accountList = Accounts.getAccountsConfig().getAccounts();
+        @NotNull final Optional<AccountsConfig.Account> filtered = accountList.stream()
                 .filter(account -> account.getOauthAccessToken().equals(runtimeSettings.oauthAccessToken) && account.getOauthRefreshToken().equals(runtimeSettings.oauthRefreshToken))
                 .findAny();
 
@@ -108,15 +104,15 @@ public final class Reference {
     }
 
     @SneakyThrows
-    public static @NonNull String getServerOfServerId(final int serverId) {
-        @NonNull final URL url = new URL(String.format(serverNameUrl, serverId));
-        @NonNull final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    public static @NotNull String getServerOfServerId(final int serverId) {
+        @NotNull final URL url = new URL(String.format(serverNameUrl, serverId));
+        @NotNull final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("GET");
 
         try (
-                @NonNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
-                @NonNull final BufferedReader reader = new BufferedReader(inputStreamReader)
+                @NotNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
+                @NotNull final BufferedReader reader = new BufferedReader(inputStreamReader)
         ) {
             return reader.readLine();
         }

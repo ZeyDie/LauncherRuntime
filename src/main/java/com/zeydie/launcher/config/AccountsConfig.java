@@ -3,7 +3,6 @@ package com.zeydie.launcher.config;
 import com.zeydie.launcher.Reference;
 import com.zeydie.sgson.SGsonFile;
 import lombok.Data;
-import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import pro.gravit.launcher.LauncherNetworkAPI;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
@@ -20,14 +19,14 @@ public final class AccountsConfig {
     public void load() {
         this.accounts = new SGsonFile(Reference.accountConfig).fromJsonToObject(this).getAccounts();
 
-        @NonNull final RuntimeSettings runtimeSettings = JavaFXApplication.getInstance().runtimeSettings;
+        @NotNull final RuntimeSettings runtimeSettings = JavaFXApplication.getInstance().runtimeSettings;
 
         if (runtimeSettings.oauthRefreshToken == null) return;
 
-        @NonNull final String login = Reference.getLoginOfRefreshToken(runtimeSettings.oauthRefreshToken);
+        @NotNull final String login = Reference.getLoginOfRefreshToken(runtimeSettings.oauthRefreshToken);
 
         if (this.accounts.stream().noneMatch(account -> account.getLogin().equals(login))) {
-            @NonNull final Account account = new Account();
+            @NotNull final Account account = new Account();
 
             account.setLogin(login);
             account.setOauthRefreshToken(runtimeSettings.oauthRefreshToken);
