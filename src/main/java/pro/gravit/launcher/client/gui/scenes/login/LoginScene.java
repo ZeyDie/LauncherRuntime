@@ -54,7 +54,8 @@ import java.util.function.Consumer;
 public class LoginScene extends AbstractScene {
     public Map<Class<? extends GetAvailabilityAuthRequestEvent.AuthAvailabilityDetails>, AbstractAuthMethod<? extends GetAvailabilityAuthRequestEvent.AuthAvailabilityDetails>> authMethods = new HashMap<>(8);
     public boolean isLoginStarted;
-    private List<GetAvailabilityAuthRequestEvent.AuthAvailability> auth;
+    //TODO ZeyCodeModified from private to public
+    public List<GetAvailabilityAuthRequestEvent.AuthAvailability> auth;
     //TODO ZeyCodeClear
     /*private CheckBox savePasswordCheckBox;
     private CheckBox autoenter;*/
@@ -198,7 +199,8 @@ public class LoginScene extends AbstractScene {
         }, null);
     }
 
-    private void postInit() {
+    //TODO ZeyCodeModified from private to public
+    public void postInit() {
         if (this.application.guiModuleConfig.autoAuth || this.application.runtimeSettings.autoAuth) {
             this.contextHelper.runInFxThread(this::loginWithGui);
         }

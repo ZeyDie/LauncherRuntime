@@ -297,9 +297,6 @@ public abstract class AbstractScene extends AbstractVisualComponent {
                     this.application.stateService.exit();
                     //TODO ZeyCodeReplace loginScene on fastLoginScene
                     this.switchScene(this.application.gui.fastLoginScene);
-                    //TODO ZeyCodeStart
-                    this.getCurrentStage().stage.centerOnScreen();
-                    //TODO ZeyCodeEnd
                 } catch (Exception var2) {
                     this.errorHandle(var2);
                 }
@@ -309,8 +306,13 @@ public abstract class AbstractScene extends AbstractVisualComponent {
         });
     }
 
-    protected void switchScene(AbstractScene scene) throws Exception {
+    //TODO ZeyCodeModified to public from protected
+    public void switchScene(AbstractScene scene) throws Exception {
         this.currentStage.setScene(scene);
+
+        //TODO ZeyCodeStart
+        this.currentStage.stage.centerOnScreen();
+        //TODO ZeyCodeEnd
     }
 
     public Node getHeader() {

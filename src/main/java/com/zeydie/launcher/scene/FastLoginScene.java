@@ -15,8 +15,8 @@ import pro.gravit.launcher.client.gui.config.RuntimeSettings;
 import pro.gravit.launcher.client.gui.helper.LookupHelper;
 import pro.gravit.launcher.client.gui.impl.ContextHelper;
 import pro.gravit.launcher.client.gui.scenes.AbstractScene;
+import pro.gravit.launcher.client.gui.scenes.login.LoginScene;
 
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -88,10 +88,14 @@ public final class FastLoginScene extends AbstractScene {
         runtimeSettings.oauthExpire = this.selectedAccount.getOauthExpire();
 
         ContextHelper.runInFxThreadStatic(() -> {
-            this.switchScene(JavaFXApplication.getInstance().gui.loginScene);
-            this.currentStage.stage.centerOnScreen();
+            @NonNull final LoginScene loginScene = JavaFXApplication.getInstance().gui.loginScene;
 
-            JavaFXApplication.getInstance().gui.loginScene.tryOAuthLogin();
+            if (loginScene.auth == null)
+                super.switchScene(loginScene);
+            else {
+                super.switchScene(loginScene);
+                loginScene.tryOAuthLogin();
+            }
         });
     }
 
@@ -100,14 +104,19 @@ public final class FastLoginScene extends AbstractScene {
         @NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
         @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
 
-        runtimeSettings.lastAuth = null;
         runtimeSettings.oauthAccessToken = null;
         runtimeSettings.oauthRefreshToken = null;
         runtimeSettings.oauthExpire = 0;
 
         ContextHelper.runInFxThreadStatic(() -> {
-            super.switchScene(JavaFXApplication.getInstance().gui.loginScene);
-            super.currentStage.stage.centerOnScreen();
+            @NonNull final LoginScene loginScene = JavaFXApplication.getInstance().gui.loginScene;
+
+            if (loginScene.auth == null)
+                super.switchScene(loginScene);
+            else {
+                super.switchScene(loginScene);
+                loginScene.postInit();
+            }
         });
     }
 }
