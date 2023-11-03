@@ -5,7 +5,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import lombok.Getter;
 import pro.gravit.launcher.Launcher;
 import pro.gravit.launcher.LauncherConfig;
 import pro.gravit.launcher.LauncherEngine;
@@ -18,6 +17,7 @@ import pro.gravit.launcher.client.gui.commands.RuntimeCommand;
 import pro.gravit.launcher.client.gui.commands.VersionCommand;
 import pro.gravit.launcher.client.gui.config.GuiModuleConfig;
 import pro.gravit.launcher.client.gui.config.RuntimeSettings;
+import pro.gravit.launcher.client.gui.config.RuntimeSettings.ProfileSettings;
 import pro.gravit.launcher.client.gui.config.StdSettingsManager;
 import pro.gravit.launcher.client.gui.helper.EnFSHelper;
 import pro.gravit.launcher.client.gui.impl.GuiEventHandler;
@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -74,168 +75,195 @@ public class JavaFXApplication extends Application {
     public PingService pingService;
     public OfflineService offlineService;
     public TriggerManager triggerManager;
-    @Getter
     private SettingsManager settingsManager;
     private PrimaryStage mainStage;
     private boolean debugMode;
     private ResourceBundle resources;
     private static Path enfsDirectory;
+    private CommandCategory runtimeCategory;
 
     public JavaFXApplication() {
         INSTANCE.set(this);
     }
 
     public static JavaFXApplication getInstance() {
-        return INSTANCE.get();
+        return (JavaFXApplication) INSTANCE.get();
     }
 
     public AbstractScene getCurrentScene() {
-        return (AbstractScene) mainStage.getVisualComponent();
+        return (AbstractScene) this.mainStage.getVisualComponent();
     }
 
     public PrimaryStage getMainStage() {
-        return mainStage;
+        return this.mainStage;
     }
 
     @Override
     public void init() throws Exception {
-        guiModuleConfig = new GuiModuleConfig();
-        settingsManager = new StdSettingsManager();
-        UserSettings.providers.register(JavaRuntimeModule.RUNTIME_NAME, RuntimeSettings.class);
-        settingsManager.loadConfig();
-        NewLauncherSettings settings = settingsManager.getConfig();
-        if (settings.userSettings.get(JavaRuntimeModule.RUNTIME_NAME) == null)
-            settings.userSettings.put(JavaRuntimeModule.RUNTIME_NAME, RuntimeSettings.getDefault(guiModuleConfig));
-        try {
-            settingsManager.loadHDirStore();
-        } catch (Exception e) {
-            LogHelper.error(e);
+        System.setProperty("prism.lcdtext", "false");
+        this.guiModuleConfig = new GuiModuleConfig();
+        this.settingsManager = new StdSettingsManager();
+        UserSettings.providers.register("stdruntime", RuntimeSettings.class);
+        this.settingsManager.loadConfig();
+        NewLauncherSettings settings = this.settingsManager.getConfig();
+        if (settings.userSettings.get("stdruntime") == null) {
+            settings.userSettings.put("stdruntime", RuntimeSettings.getDefault(this.guiModuleConfig));
         }
-        runtimeSettings = (RuntimeSettings) settings.userSettings.get(JavaRuntimeModule.RUNTIME_NAME);
-        runtimeSettings.apply();
-        DirBridge.dirUpdates = runtimeSettings.updatesDir == null ? DirBridge.defaultUpdatesDir : runtimeSettings.updatesDir;
-        service = Request.getRequestService();
-        service.registerEventHandler(new GuiEventHandler(this));
-        stateService = new StateService();
-        messageManager = new MessageManager(this);
-        securityService = new RuntimeSecurityService(this);
-        skinManager = new SkinManager(this);
-        triggerManager = new TriggerManager(this);
-        javaService = new JavaService(this);
-        offlineService = new OfflineService(this);
-        pingService = new PingService();
-        registerCommands();
 
+        try {
+            this.settingsManager.loadHDirStore();
+        } catch (Exception var3) {
+            LogHelper.error(var3);
+        }
+
+        this.runtimeSettings = (RuntimeSettings) settings.userSettings.get("stdruntime");
+        this.runtimeSettings.apply();
+        DirBridge.dirUpdates = this.runtimeSettings.updatesDir == null ? DirBridge.defaultUpdatesDir : this.runtimeSettings.updatesDir;
+        this.service = Request.getRequestService();
+        this.service.registerEventHandler(new GuiEventHandler(this));
+        this.stateService = new StateService();
+        this.messageManager = new MessageManager(this);
+        this.securityService = new RuntimeSecurityService(this);
+        this.skinManager = new SkinManager(this);
+        this.triggerManager = new TriggerManager(this);
+        this.javaService = new JavaService(this);
+        this.offlineService = new OfflineService(this);
+        this.pingService = new PingService();
+        this.registerCommands();
+
+        //TODO ZeyCodeStart
         Accounts.load();
+        //TODO ZeyCodeEnd
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        // If debugging
         try {
             Class.forName("pro.gravit.launcher.debug.DebugMain", false, JavaFXApplication.class.getClassLoader());
             if (DebugMain.IS_DEBUG.get()) {
                 runtimeDirectory = IOHelper.WORKING_DIR.resolve("runtime");
-                debugMode = true;
+                this.debugMode = true;
             }
-        } catch (Throwable e) {
-            if (!(e instanceof ClassNotFoundException)) {
-                LogHelper.error(e);
+        } catch (Throwable var6) {
+            if (!(var6 instanceof ClassNotFoundException)) {
+                LogHelper.error(var6);
             }
         }
+
         try {
             Class.forName("pro.gravit.utils.enfs.EnFS", false, JavaFXApplication.class.getClassLoader());
             if (runtimeDirectory == null) {
                 EnFSHelper.initEnFS();
-                enfsDirectory = EnFSHelper.initEnFSDirectory(config, runtimeSettings.theme);
+                enfsDirectory = EnFSHelper.initEnFSDirectory(this.config, this.runtimeSettings.theme);
             }
+
             if (!EnFSHelper.checkEnFSUrl()) {
                 JavaRuntimeModule.noEnFSAlert();
             }
-        } catch (Throwable e) {
-            if (!(e instanceof ClassNotFoundException)) {
-                LogHelper.error(e);
+        } catch (Throwable var5) {
+            if (!(var5 instanceof ClassNotFoundException)) {
+                LogHelper.error(var5);
             }
         }
-        // System loading
-        if (runtimeSettings.locale == null)
-            runtimeSettings.locale = RuntimeSettings.DEFAULT_LOCALE;
+
+        if (this.runtimeSettings.locale == null) {
+            this.runtimeSettings.locale = RuntimeSettings.DEFAULT_LOCALE;
+        }
+
         try {
-            updateLocaleResources(runtimeSettings.locale.name);
-        } catch (Throwable e) {
-            JavaRuntimeModule.noLocaleAlert(runtimeSettings.locale.name);
-            if (!(e instanceof FileNotFoundException)) {
-                LogHelper.error(e);
+            this.updateLocaleResources(this.runtimeSettings.locale.name);
+        } catch (Throwable var4) {
+            JavaRuntimeModule.noLocaleAlert(this.runtimeSettings.locale.name);
+            if (!(var4 instanceof FileNotFoundException)) {
+                LogHelper.error(var4);
             }
+
             Platform.exit();
         }
-        {
-            RuntimeDialogService dialogService = new RuntimeDialogService(messageManager);
-            DialogService.setDialogImpl(dialogService);
-            DialogService.setNotificationImpl(dialogService);
-        }
-        if(offlineService.isOfflineMode()) {
-            if(!offlineService.isAvailableOfflineMode() && !debugMode) {
-                messageManager.showDialog(getTranslation("runtime.offline.dialog.header"), getTranslation("runtime.offline.dialog.text"), Platform::exit, Platform::exit, false);
-                return;
-            }
-        }
-        try {
-            mainStage = new PrimaryStage(stage, String.format("%s Launcher", config.projectName));
-            // Overlay loading
-            gui = new GuiObjectsContainer(this);
-            gui.init();
-            //
-            if (!IS_NOGUI.get()) {
-                mainStage.setScene(
-                        Accounts.getAccountsConfig().getAccounts().isEmpty() ? gui.loginScene : gui.fastLoginScene
-                );
-                mainStage.show();
-                if(offlineService.isOfflineMode()) {
-                    messageManager.createNotification(getTranslation("runtime.offline.notification.header"), getTranslation("runtime.offline.notification.text"));
+
+        RuntimeDialogService dialogService = new RuntimeDialogService(this.messageManager);
+        DialogService.setDialogImpl(dialogService);
+        DialogService.setNotificationImpl(dialogService);
+        if (this.offlineService.isOfflineMode() && !this.offlineService.isAvailableOfflineMode() && !this.debugMode) {
+            this.messageManager.showDialog(this.getTranslation("runtime.offline.dialog.header"), this.getTranslation("runtime.offline.dialog.text"), Platform::exit, Platform::exit, false);
+        } else {
+            try {
+                this.mainStage = new PrimaryStage(stage, String.format("%s Launcher", this.config.projectName));
+                this.gui = new GuiObjectsContainer(this);
+                this.gui.init();
+                if (!IS_NOGUI.get()) {
+                    this.mainStage.setScene(
+                            //TODO ZeyCodeStart
+                            Accounts.getAccountsConfig().getAccounts().isEmpty() ? this.gui.loginScene : this.gui.fastLoginScene
+                            //TODO ZeyCodeEnd
+                            //TODO ZeyCodeClear
+                            //this.gui.loginScene
+                    );
+                    this.mainStage.show();
+                    if (this.offlineService.isOfflineMode()) {
+                        this.messageManager.createNotification(this.getTranslation("runtime.offline.notification.header"), this.getTranslation("runtime.offline.notification.text"));
+                    }
+                } else {
+                    Platform.setImplicitExit(false);
                 }
-            } else {
-                Platform.setImplicitExit(false);
+
+                LauncherEngine.modulesManager.invokeEvent(new ClientGuiPhase(StdJavaRuntimeProvider.getInstance()));
+                AuthRequest.registerProviders();
+            } catch (Throwable var3) {
+                LogHelper.error(var3);
+                JavaRuntimeModule.errorHandleAlert(var3);
+                Platform.exit();
             }
-            //
-            LauncherEngine.modulesManager.invokeEvent(new ClientGuiPhase(StdJavaRuntimeProvider.getInstance()));
-            AuthRequest.registerProviders();
-        } catch (Throwable e) {
-            LogHelper.error(e);
-            JavaRuntimeModule.errorHandleAlert(e);
-            Platform.exit();
+
         }
     }
 
     public void updateLocaleResources(String locale) throws IOException {
-        try (InputStream input = getResource(String.format("runtime_%s.properties", locale))) {
-            resources = new PropertyResourceBundle(input);
+        InputStream input = this.getResource(String.format("runtime_%s.properties", locale));
+
+        try {
+            this.resources = new PropertyResourceBundle(input);
+        } catch (Throwable var6) {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (Throwable var5) {
+                    var6.addSuppressed(var5);
+                }
+            }
+
+            throw var6;
         }
-        fxmlFactory = new FXMLFactory(resources, workers);
+
+        if (input != null) {
+            input.close();
+        }
+
+        this.fxmlFactory = new FXMLFactory(this.resources, this.workers);
     }
 
     public void resetDirectory() throws IOException {
-        if(enfsDirectory != null) {
-            enfsDirectory = EnFSHelper.initEnFSDirectory(config, runtimeSettings.theme);
+        if (enfsDirectory != null) {
+            enfsDirectory = EnFSHelper.initEnFSDirectory(this.config, this.runtimeSettings.theme);
         }
+
     }
 
-    private CommandCategory runtimeCategory;
-
     private void registerCommands() {
-        runtimeCategory = new BaseCommandCategory();
-        runtimeCategory.registerCommand("version", new VersionCommand());
+        this.runtimeCategory = new BaseCommandCategory();
+        this.runtimeCategory.registerCommand("version", new VersionCommand());
         if (ConsoleManager.isConsoleUnlock) {
-            registerPrivateCommands();
+            this.registerPrivateCommands();
         }
-        ConsoleManager.handler.registerCategory(new CommandHandler.Category(runtimeCategory, "runtime"));
+
+        ConsoleManager.handler.registerCategory(new CommandHandler.Category(this.runtimeCategory, "runtime"));
     }
 
     public void registerPrivateCommands() {
-        if (runtimeCategory == null) return;
-        runtimeCategory.registerCommand("runtime", new RuntimeCommand(this));
+        if (this.runtimeCategory != null) {
+            this.runtimeCategory.registerCommand("runtime", new RuntimeCommand(this));
+        }
     }
-
 
     @Override
     public void stop() {
@@ -244,7 +272,7 @@ public class JavaFXApplication extends Application {
     }
 
     public boolean isDebugMode() {
-        return debugMode;
+        return this.debugMode;
     }
 
     private InputStream getResource(String name) throws IOException {
@@ -254,43 +282,45 @@ public class JavaFXApplication extends Application {
     public static URL getResourceURL(String name) throws IOException {
         if (runtimeDirectory != null) {
             Path target = runtimeDirectory.resolve(name);
-            if (!Files.exists(target))
+            if (!Files.exists(target, new LinkOption[0])) {
                 throw new FileNotFoundException(String.format("File runtime/%s not found", name));
-            return target.toUri().toURL();
-        } else if (enfsDirectory != null) {
-            return getResourceEnFs(name);
+            } else {
+                return target.toUri().toURL();
+            }
         } else {
-            return Launcher.getResourceURL(name);
+            return enfsDirectory != null ? getResourceEnFs(name) : Launcher.getResourceURL(name);
         }
     }
 
     private static URL getResourceEnFs(String name) throws IOException {
         return EnFSHelper.getURL(enfsDirectory.resolve(name).toString().replaceAll("\\\\", "/"));
-        //return EnFS.main.getURL(enfsDirectory.resolve(name));
     }
 
     public URL tryResource(String name) {
         try {
             return getResourceURL(name);
-        } catch (IOException e) {
+        } catch (IOException var3) {
             return null;
         }
-
     }
 
     public RuntimeSettings.ProfileSettings getProfileSettings() {
-        return getProfileSettings(stateService.getProfile());
+        return this.getProfileSettings(this.stateService.getProfile());
     }
 
     public RuntimeSettings.ProfileSettings getProfileSettings(ClientProfile profile) {
-        if (profile == null) throw new NullPointerException("ClientProfile not selected");
-        UUID uuid = profile.getUUID();
-        RuntimeSettings.ProfileSettings settings = runtimeSettings.profileSettings.get(uuid);
-        if (settings == null) {
-            settings = RuntimeSettings.ProfileSettings.getDefault(javaService, profile);
-            runtimeSettings.profileSettings.put(uuid, settings);
+        if (profile == null) {
+            throw new NullPointerException("ClientProfile not selected");
+        } else {
+            UUID uuid = profile.getUUID();
+            RuntimeSettings.ProfileSettings settings = (RuntimeSettings.ProfileSettings) this.runtimeSettings.profileSettings.get(uuid);
+            if (settings == null) {
+                settings = ProfileSettings.getDefault(this.javaService, profile);
+                this.runtimeSettings.profileSettings.put(uuid, settings);
+            }
+
+            return settings;
         }
-        return settings;
     }
 
     public static void setNoGUIMode(boolean isNogui) {
@@ -298,11 +328,11 @@ public class JavaFXApplication extends Application {
     }
 
     public void setMainScene(AbstractScene scene) throws Exception {
-        mainStage.setScene(scene);
+        this.mainStage.setScene(scene);
     }
 
     public Stage newStage() {
-        return newStage(StageStyle.TRANSPARENT);
+        return this.newStage(StageStyle.TRANSPARENT);
     }
 
     public Stage newStage(StageStyle style) {
@@ -313,36 +343,37 @@ public class JavaFXApplication extends Application {
     }
 
     public final String getTranslation(String name) {
-        return getTranslation(name, String.format("'%s'", name));
+        return this.getTranslation(name, String.format("'%s'", name));
     }
 
     public final String getTranslation(String key, String defaultValue) {
         try {
-            return resources.getString(key);
-        } catch (Throwable e) {
+            return this.resources.getString(key);
+        } catch (Throwable var4) {
             return defaultValue;
         }
     }
 
     public boolean openURL(String url) {
         try {
-            getHostServices().showDocument(url);
+            this.getHostServices().showDocument(url);
             return true;
-        } catch (Throwable e) {
-            LogHelper.error(e);
+        } catch (Throwable var3) {
+            LogHelper.error(var3);
             return false;
         }
     }
 
     public void saveSettings() throws IOException {
-        settingsManager.saveConfig();
-        settingsManager.saveHDirStore();
-        if (gui != null && gui.optionsScene != null && stateService != null && stateService.getProfiles() != null) {
+        this.settingsManager.saveConfig();
+        this.settingsManager.saveHDirStore();
+        if (this.gui != null && this.gui.optionsScene != null && this.stateService != null && this.stateService.getProfiles() != null) {
             try {
-                gui.optionsScene.saveAll();
-            } catch (Throwable ex) {
-                LogHelper.error(ex);
+                this.gui.optionsScene.saveAll();
+            } catch (Throwable var2) {
+                LogHelper.error(var2);
             }
         }
+
     }
 }

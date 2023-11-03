@@ -54,9 +54,6 @@ public final class FastLoginScene extends AbstractScene {
 
         this.newyearPane = LookupHelper.lookup(super.layout, "#newyearPane");
 
-        /*if (!JavaFXApplication.getInstance().isDebugMode())
-            JavaFXApplication.getInstance().gui.loginScene.launcherRequest();*/
-
         if (Accounts.getAccountsConfig().getAccounts().isEmpty())
             this.switchToLoginning();
 
