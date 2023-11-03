@@ -54,15 +54,15 @@ public final class FastLoginScene extends AbstractScene {
 
         this.newyearPane = LookupHelper.lookup(super.layout, "#newyearPane");
 
+        /*if (!JavaFXApplication.getInstance().isDebugMode())
+            JavaFXApplication.getInstance().gui.loginScene.launcherRequest();*/
+
         if (Accounts.getAccountsConfig().getAccounts().isEmpty())
             this.switchToLoginning();
 
         this.timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                /*if (!(JavaFXApplication.getInstance().getCurrentScene() instanceof FastLoginScene))
-                    this.cancel();*/
-
                 newyearPane.getStyleClass().clear();
                 newyearPane.getStyleClass().add("tm-" + scene);
 
@@ -70,7 +70,7 @@ public final class FastLoginScene extends AbstractScene {
 
                 if (scene > 3) scene = 1;
             }
-        }, 0, 1000);
+        }, 0, 500);
     }
 
     @Override

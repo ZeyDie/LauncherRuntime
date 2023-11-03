@@ -171,7 +171,8 @@ public class ServerInfoScene extends AbstractScene {
                     }
                 } catch (Throwable e) {
                     LogHelper.error(e);
-                    if (getCurrentStage().getVisualComponent() instanceof DebugScene debugScene) { //TODO: FIX
+                    if (getCurrentStage().getVisualComponent() instanceof DebugScene) { //TODO: FIX
+                        final DebugScene debugScene = (DebugScene) getCurrentStage().getVisualComponent();
                         debugScene.append(String.format("Launcher fatal error(Write Params Thread): %s: %s", e.getClass().getName(), e.getMessage()));
                         if (debugScene.currentProcess != null && debugScene.currentProcess.isAlive()) {
                             debugScene.currentProcess.destroy();

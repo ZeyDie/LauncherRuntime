@@ -1,10 +1,12 @@
 package pro.gravit.launcher.client.gui.impl;
 
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.scenes.AbstractScene;
 
 import java.util.concurrent.atomic.AtomicReference;

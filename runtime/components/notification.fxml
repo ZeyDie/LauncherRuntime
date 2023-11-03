@@ -9,13 +9,13 @@
 
 <!-- DrLeonardo refactor -->
 
-<Pane fx:id="notificationPane" prefHeight="89.0" prefWidth="316.0" styleClass="blocks" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="notificationPane" prefHeight="300.0" prefWidth="316.0" styleClass="blocks" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
 
    <!-- Отступы-->
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
-   <ImageView fitHeight="89.0" fitWidth="316.0">
+   <ImageView fitHeight="300.0" fitWidth="316.0">
       <image>
          <Image url="@../images/message.png" />
       </image>

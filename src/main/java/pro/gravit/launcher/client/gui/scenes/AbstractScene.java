@@ -1,5 +1,6 @@
 package pro.gravit.launcher.client.gui.scenes;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import pro.gravit.launcher.Launcher;
 import pro.gravit.launcher.LauncherConfig;
+import pro.gravit.launcher.LauncherEngine;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.config.RuntimeSettings;
 import pro.gravit.launcher.client.gui.helper.LookupHelper;
@@ -198,7 +200,9 @@ public abstract class AbstractScene extends AbstractVisualComponent {
             LookupHelper.<ButtonBase>lookupIfPossible(layout, "#hide").ifPresent((b) -> b.setOnAction((e) -> currentStage.hide()));
         } else {
             LookupHelper.<ButtonBase>lookupIfPossible(header, "#controls", "#exit").ifPresent((b) -> b.setOnAction((e) -> currentStage.close()));
-            LookupHelper.<ButtonBase>lookupIfPossible(header, "#controls", "#minimize").ifPresent((b) -> b.setOnAction((e) -> currentStage.hide()));
+            LookupHelper.<ButtonBase>lookupIfPossible(header, "#controls", "#minimize").ifPresent((b) -> b.setOnAction((e) -> {
+                currentStage.hide();
+            }));
             LookupHelper.<ButtonBase>lookupIfPossible(header, "#controls", "#lang").ifPresent((b) -> {
 
                 b.setContextMenu(makeLangContextMenu());

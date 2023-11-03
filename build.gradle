@@ -10,8 +10,8 @@ javafx {
     version = "17"
     modules = ['javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.web']
 }
-sourceCompatibility = "17.PREVIEW"
-targetCompatibility = "17.PREVIEW"
+sourceCompatibility = "1.8"//"17.PREVIEW"
+targetCompatibility = "1.8"//"17.PREVIEW"
 group 'pro.gravit.launcher'
 version '2.2.2'
 def mainClassName = "pro.gravit.launcher.client.JavaRuntimeModule"
@@ -68,6 +68,8 @@ dependencies {
     implementation 'io.netty:netty-codec-http:4.1.67.Final'
     implementation 'com.github.oshi:oshi-core:5.8.1'
     implementation 'com.google.code.gson:gson:2.8.8'
+
+    implementation 'pro.gravit.launcher.client:JavaRuntime_lmodule:minefite'
 
     // https://github.com/ZeyDie/Simple-GSON
     implementation group: 'com.zeydie', name: 'SGson', version: '2.9.x-1.1'

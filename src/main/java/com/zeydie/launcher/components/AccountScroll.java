@@ -3,10 +3,13 @@ package com.zeydie.launcher.components;
 import com.zeydie.launcher.Accounts;
 import com.zeydie.launcher.config.AccountsConfig;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import lombok.Getter;
 import lombok.NonNull;
@@ -44,10 +47,11 @@ public final class AccountScroll {
 
         for (int i = 0; i < accountList.size(); i++) {
             @NonNull final AccountsConfig.Account account = accountList.get(i);
+            @NonNull final Button loginButton = this.getLoginButton(account);
 
-            this.gridPane.add(this.getLoginButton(account), 0, i);
+            this.gridPane.add(loginButton, 0, i);
             this.gridPane.add(this.getServerIcon(account), 1, i);
-            this.gridPane.add(this.getExitButton(account), 2, i);
+            this.gridPane.add(this.getExitButton(account, loginButton), 2, i);
         }
     }
 
@@ -104,7 +108,10 @@ public final class AccountScroll {
     }
 
     @SneakyThrows
-    private Button getExitButton(@NonNull final AccountsConfig.Account account) {
+    private Button getExitButton(
+            @NonNull final AccountsConfig.Account account,
+            @NonNull final Button loginButton
+    ) {
         @NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
         @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
 
@@ -138,6 +145,8 @@ public final class AccountScroll {
 
             this.updateGrid();
         });
+        exitButton.setOnMouseEntered(event -> loginButton.setStyle("-fx-background-color: rgba(255, 255, 255, 0.15);-fx-background-radius: 12px;"));
+        exitButton.setOnMouseExited(event -> loginButton.setStyle(""));
 
         exitButton.getStyleClass().add("exitButton");
 

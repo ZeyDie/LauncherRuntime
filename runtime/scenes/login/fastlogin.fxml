@@ -12,7 +12,7 @@
         <ImageView fitHeight="492.0" fitWidth="440.0">
             <Image url="@../../images/fastlogin/background.png"/>
         </ImageView>
-        <Pane id="newyearPane" layoutX="12" prefHeight="21" prefWidth="440" />
+        <Pane id="newyearPane" layoutX="12" prefHeight="21" prefWidth="440"/>
         <Pane id="authPane" layoutX="28.0" layoutY="89.0" prefHeight="380.0" prefWidth="380.0">
             <ImageView fitHeight="22.0" fitWidth="318.0" layoutX="31" layoutY="25">
                 <Image url="@../../images/fastlogin/choise.png"/>
@@ -27,10 +27,45 @@
                     </rowConstraints>
                 </GridPane>
             </ScrollPane>
-            <Button id="addAccountButton" layoutX="200.0" layoutY="290.0" mnemonicParsing="false" prefHeight="20"
+            <Button id="addAccountButton" layoutX="200.0" layoutY="287.0" mnemonicParsing="false" prefHeight="20"
                     prefWidth="160" text="Добавить аккаунт"/>
             <Button id="authButton" layoutX="25.0" layoutY="320.0" mnemonicParsing="false" prefHeight="45"
                     prefWidth="330"/>
+        </Pane>
+        <Pane id="header" prefHeight="21.0" prefWidth="440.0">
+            <children>
+                <Pane id="controls" prefHeight="0.0" prefWidth="0.0">
+                    <children>
+                        <Button id="exit" graphicTextGap="0.0" layoutX="410.0" layoutY="5" minHeight="20.0"
+                                minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0"
+                                styleClass="icon-button">
+                            <tooltip>
+                                <Tooltip id="exitTooltip" text="%runtime.scenes.login.exitTooltip"/>
+                            </tooltip>
+                            <graphic>
+                                <ImageView>
+                                    <image>
+                                        <Image url="@../../images/buttons/btn/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button id="minimize" layoutX="390.0" minHeight="20.0" layoutY="10" minWidth="20.0"
+                                mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" styleClass="icon-button">
+                            <tooltip>
+                                <Tooltip id="minimizeTooltip" text="%runtime.scenes.login.minimizeTooltip"/>
+                            </tooltip>
+                            <graphic>
+                                <ImageView>
+                                    <image>
+                                        <Image url="@../../images/buttons/btn/hide.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                    </children>
+                </Pane>
+            </children>
         </Pane>
     </Pane>
 
