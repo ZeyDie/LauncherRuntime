@@ -40,7 +40,7 @@
 
                 <!-- Активная кнопка -->
                 <Pane id="authActive" maxHeight="45.0" maxWidth="350.0" minHeight="45.0" minWidth="330.0"
-                      prefHeight="45.0" prefWidth="330.0">
+                      prefHeight="45.0" prefWidth="330.0" visible="false">
                     <children>
                         <SVGPath id="authBorder" disable="true" opacity="0.0" visible="false"/>
                         <Button id="authButton" alignment="CENTER" cacheShape="false" cancelButton="true"
@@ -89,13 +89,13 @@
                     <children>
 
                         <!-- Ссылки -->
-                        <Pane id="links" layoutX="30.0" layoutY="19.0" prefHeight="20.0" prefWidth="196.0">
+                        <Pane id="links" layoutX="30.0" layoutY="19.0" prefHeight="20.0" prefWidth="196.0" visible="false">
                             <children>
                                 <Text id="forgotPass" layoutY="16.0" styleClass="forgotPass"
                                       text="%runtime.scenes.login.forgotPass" underline="true" wrappingWidth="196.0"/>
                             </children>
                         </Pane>
-                        <FlowPane id="registerPane" layoutX="30.0" layoutY="43.0" prefHeight="20.0" prefWidth="112.0">
+                        <FlowPane id="registerPane" layoutX="30.0" layoutY="43.0" prefHeight="20.0" prefWidth="112.0" visible="false">
                             <children>
                                 <Text id="createAccount" styleClass="createAccount-text"
                                       text="%runtime.scenes.login.createAccount" underline="true"/>

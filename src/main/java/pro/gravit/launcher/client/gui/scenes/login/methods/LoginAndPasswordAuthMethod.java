@@ -102,9 +102,9 @@ public class LoginAndPasswordAuthMethod extends AbstractAuthMethod<AuthPasswordD
                 this.future.completeExceptionally(USER_AUTH_CANCELED_EXCEPTION);
 
                 //TODO ZeyCodeStart
-                @NotNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
-
                 try {
+                    @NotNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
+
                     javaFXApplication.getCurrentScene().switchScene(javaFXApplication.gui.fastLoginScene);
                 } catch (Exception ex) {
                     ex.printStackTrace();

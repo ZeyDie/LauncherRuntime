@@ -3,6 +3,7 @@ package com.zeydie.launcher.config;
 import com.zeydie.launcher.Reference;
 import com.zeydie.sgson.SGsonFile;
 import lombok.Data;
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import pro.gravit.launcher.LauncherNetworkAPI;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
@@ -14,34 +15,15 @@ import java.util.List;
 @Data
 public final class AccountsConfig {
     @LauncherNetworkAPI
+    @NotNull
     private List<Account> accounts = new ArrayList<>();
 
     public void load() {
         this.accounts = new SGsonFile(Reference.accountConfig).fromJsonToObject(this).getAccounts();
-
-        @NotNull final RuntimeSettings runtimeSettings = JavaFXApplication.getInstance().runtimeSettings;
-
-        if (runtimeSettings.oauthRefreshToken == null) return;
-
-        @NotNull final String login = Reference.getLoginOfRefreshToken(runtimeSettings.oauthRefreshToken);
-
-        if (this.accounts.stream().noneMatch(account -> account.getLogin().equals(login))) {
-            @NotNull final Account account = new Account();
-
-            account.setLogin(login);
-            account.setOauthRefreshToken(runtimeSettings.oauthRefreshToken);
-            account.setOauthAccessToken(runtimeSettings.oauthAccessToken);
-            account.setOauthExpire(runtimeSettings.oauthExpire);
-            account.setServerId(Reference.getServerIdForUUID(Reference.getUUIDForLogin(login)));
-
-            this.accounts.add(account);
-
-            this.save();
-        }
     }
 
     public void save() {
-        @NotNull final SGsonFile file = new SGsonFile(Reference.accountConfig);
+        @NonNull final SGsonFile file = new SGsonFile(Reference.accountConfig);
 
         file.getFile().mkdirs();
         file.writeJsonFile(this);

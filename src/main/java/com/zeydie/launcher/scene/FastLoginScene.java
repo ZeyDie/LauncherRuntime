@@ -6,6 +6,7 @@ import com.zeydie.launcher.config.AccountsConfig;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +22,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public final class FastLoginScene extends AbstractScene {
-    private final Timer timer = new Timer();
     private AccountScroll accountsScroll;
     private Button addAccountButton;
     private Button authButton;
@@ -30,19 +30,22 @@ public final class FastLoginScene extends AbstractScene {
     @Getter
     @Nullable
     private AccountsConfig.Account selectedAccount;
+
+    @NotNull
+    private final Timer timer = new Timer();
     private int scene = 1;
 
-    public FastLoginScene(@NotNull final JavaFXApplication application) {
+    public FastLoginScene(@NonNull final JavaFXApplication application) {
         super("scenes/login/fastlogin.fxml", application);
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "fastlogin";
     }
 
     @Override
-    protected void doInit() throws Exception {
+    protected void doInit() {
         this.accountsScroll = new AccountScroll(LookupHelper.lookup(super.layout, "#authPane", "#accountsScrollPane"));
 
         this.addAccountButton = LookupHelper.lookup(super.layout, "#authPane", "#addAccountButton");
@@ -79,15 +82,15 @@ public final class FastLoginScene extends AbstractScene {
     public void switchAuth() {
         if (this.selectedAccount == null) return;
 
-        @NotNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
-        @NotNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
+        @NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
+        @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
 
         runtimeSettings.oauthAccessToken = this.selectedAccount.getOauthAccessToken();
         runtimeSettings.oauthRefreshToken = this.selectedAccount.getOauthRefreshToken();
         runtimeSettings.oauthExpire = this.selectedAccount.getOauthExpire();
 
         ContextHelper.runInFxThreadStatic(() -> {
-            @NotNull final LoginScene loginScene = JavaFXApplication.getInstance().gui.loginScene;
+            @NonNull final LoginScene loginScene = JavaFXApplication.getInstance().gui.loginScene;
 
             if (loginScene.auth == null)
                 super.switchScene(loginScene);
@@ -100,15 +103,15 @@ public final class FastLoginScene extends AbstractScene {
 
     @SneakyThrows
     public void switchToLoginning() {
-        @NotNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
-        @NotNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
+        @NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
+        @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
 
         runtimeSettings.oauthAccessToken = null;
         runtimeSettings.oauthRefreshToken = null;
         runtimeSettings.oauthExpire = 0;
 
         ContextHelper.runInFxThreadStatic(() -> {
-            @NotNull final LoginScene loginScene = JavaFXApplication.getInstance().gui.loginScene;
+            @NonNull final LoginScene loginScene = JavaFXApplication.getInstance().gui.loginScene;
 
             if (loginScene.auth == null)
                 super.switchScene(loginScene);

@@ -2,6 +2,7 @@ package com.zeydie.launcher;
 
 import com.zeydie.launcher.config.AccountsConfig;
 import lombok.Getter;
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.config.RuntimeSettings;
@@ -19,30 +20,37 @@ public final class Accounts {
         accountsConfig.load();
     }
 
-    public static void authed(@NotNull final AuthRequestEvent authRequestEvent) {
-        @NotNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
-        @NotNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
-        @NotNull final List<AccountsConfig.Account> accountList = accountsConfig.getAccounts();
-        @NotNull final Optional<AccountsConfig.Account> filtered = accountList.stream()
-                .filter(account -> account.getLogin().equals(runtimeSettings.login))
+    public static void authed(@NonNull final AuthRequestEvent authRequestEvent) {
+        @NonNull final String login = authRequestEvent.playerProfile.username;
+
+        @NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
+        @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
+        @NonNull final List<AccountsConfig.Account> accountList = accountsConfig.getAccounts();
+        @NonNull final Optional<AccountsConfig.Account> filtered = accountList.stream()
+                .filter(account -> account.getLogin().equals(login))
                 .findAny();
 
+        @NonNull final String accessToken = runtimeSettings.oauthAccessToken;
+        @NonNull final String refreshToken = runtimeSettings.oauthRefreshToken;
+        final long expire = runtimeSettings.oauthExpire;
+        final int serverId = Reference.getServerIdForUUID(authRequestEvent.playerProfile.uuid);
+
         if (filtered.isPresent()) {
-            @NotNull final AccountsConfig.Account account = filtered.get();
+            @NonNull final AccountsConfig.Account account = filtered.get();
 
-            account.setOauthAccessToken(runtimeSettings.oauthAccessToken);
-            account.setOauthRefreshToken(runtimeSettings.oauthRefreshToken);
-            account.setOauthExpire(runtimeSettings.oauthExpire);
-            account.setLogin(Reference.getLoginOfRefreshToken(runtimeSettings.oauthRefreshToken));
-            account.setServerId(Reference.getServerIdForUUID(authRequestEvent.playerProfile.uuid));
+            account.setLogin(login);
+            account.setOauthAccessToken(accessToken);
+            account.setOauthRefreshToken(refreshToken);
+            account.setOauthExpire(expire);
+            account.setServerId(serverId);
         } else {
-            @NotNull final AccountsConfig.Account account = new AccountsConfig.Account();
+            @NonNull final AccountsConfig.Account account = new AccountsConfig.Account();
 
-            account.setOauthAccessToken(runtimeSettings.oauthAccessToken);
-            account.setOauthRefreshToken(runtimeSettings.oauthRefreshToken);
-            account.setOauthExpire(runtimeSettings.oauthExpire);
-            account.setLogin(Reference.getLoginOfRefreshToken(runtimeSettings.oauthRefreshToken));
-            account.setServerId(Reference.getServerIdForUUID(authRequestEvent.playerProfile.uuid));
+            account.setLogin(login);
+            account.setOauthAccessToken(accessToken);
+            account.setOauthRefreshToken(refreshToken);
+            account.setOauthExpire(expire);
+            account.setServerId(serverId);
 
             accountList.add(account);
         }

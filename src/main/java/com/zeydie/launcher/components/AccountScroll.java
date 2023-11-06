@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +26,7 @@ public final class AccountScroll {
     private final GridPane gridPane;
 
     public AccountScroll(
-            @NotNull final ScrollPane scrollPane
+            @NonNull final ScrollPane scrollPane
     ) {
         this.scrollPane = scrollPane;
         this.gridPane = (GridPane) scrollPane.getContent();
@@ -39,12 +40,12 @@ public final class AccountScroll {
     public void updateGrid() {
         this.gridPane.getChildren().clear();
 
-        @NotNull final AccountsConfig accountsConfig = Accounts.getAccountsConfig();
-        @NotNull final List<AccountsConfig.Account> accountList = accountsConfig.getAccounts();
+        @NonNull final AccountsConfig accountsConfig = Accounts.getAccountsConfig();
+        @NonNull final List<AccountsConfig.Account> accountList = accountsConfig.getAccounts();
 
         for (int i = 0; i < accountList.size(); i++) {
-            @NotNull final AccountsConfig.Account account = accountList.get(i);
-            @NotNull final Button loginButton = this.getLoginButton(account);
+            @NonNull final AccountsConfig.Account account = accountList.get(i);
+            @NonNull final Button loginButton = this.getLoginButton(account);
 
             this.gridPane.add(loginButton, 0, i);
             this.gridPane.add(this.getServerIcon(account), 1, i);
@@ -52,13 +53,13 @@ public final class AccountScroll {
         }
     }
 
-    private Button getLoginButton(@NotNull final AccountsConfig.Account account) {
-        @NotNull final AccountButton loginButton = new AccountButton(account.getLogin());
+    private @NotNull Button getLoginButton(@NonNull final AccountsConfig.Account account) {
+        @NonNull final AccountButton loginButton = new AccountButton(account.getLogin());
 
         loginButton.setOnAction(event -> {
             this.gridPane.getChildren().forEach(node -> {
                 if (node instanceof AccountButton) {
-                    @NotNull final ObservableList<String> styles = node.getStyleClass();
+                    @NonNull final ObservableList<String> styles = node.getStyleClass();
 
                     styles.remove("accountButton-hovered");
 
@@ -66,7 +67,7 @@ public final class AccountScroll {
                         styles.add("accountButton");
                 }
             });
-            @NotNull final ObservableList<String> styles = loginButton.getStyleClass();
+            @NonNull final ObservableList<String> styles = loginButton.getStyleClass();
 
             styles.remove("accountButton");
             styles.add("accountButton-hovered");
@@ -78,7 +79,7 @@ public final class AccountScroll {
     }
 
     @SneakyThrows
-    private @NotNull ImageView getServerIcon(@NotNull final AccountsConfig.Account account) {
+    private @NotNull ImageView getServerIcon(@NonNull final AccountsConfig.Account account) {
         final int serverId = account.getServerId();
 
         @Nullable InputStream inputStream = this.getClass().getResourceAsStream(String.format("/runtime/images/fastlogin/servers/%d.png", serverId));
@@ -89,7 +90,7 @@ public final class AccountScroll {
             inputStream = new URL("https://img.favpng.com/19/6/24/check-mark-computer-icons-sign-clip-art-png-favpng-iFiVE36gqaa5HBVQ4AWZz1tHP.jpg").openStream();
 
         assert inputStream != null;
-        @NotNull final ImageView serverImage = new ImageView(new Image(inputStream));
+        @NonNull final ImageView serverImage = new ImageView(new Image(inputStream));
 
         final int width = 25;
         final int height = 25;
@@ -105,22 +106,22 @@ public final class AccountScroll {
     }
 
     @SneakyThrows
-    private Button getExitButton(
-            @NotNull final AccountsConfig.Account account,
-            @NotNull final Button loginButton
+    private @NotNull Button getExitButton(
+            @NonNull final AccountsConfig.Account account,
+            @NonNull final Button loginButton
     ) {
-        @NotNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
-        @NotNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
+        @NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
+        @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
 
-        @NotNull final AccountsConfig accountsConfig = Accounts.getAccountsConfig();
-        @NotNull final List<AccountsConfig.Account> accountList = accountsConfig.getAccounts();
+        @NonNull final AccountsConfig accountsConfig = Accounts.getAccountsConfig();
+        @NonNull final List<AccountsConfig.Account> accountList = accountsConfig.getAccounts();
 
         @Nullable InputStream inputStream = this.getClass().getResourceAsStream("/runtime/images/fastlogin/trash.png");
 
         if (inputStream == null)
             inputStream = new URL("https://img.favpng.com/19/6/24/check-mark-computer-icons-sign-clip-art-png-favpng-iFiVE36gqaa5HBVQ4AWZz1tHP.jpg").openStream();
 
-        @NotNull final ImageView exitImage = new ImageView(new Image(inputStream));
+        @NonNull final ImageView exitImage = new ImageView(new Image(inputStream));
 
         final int width = 18;
         final int height = 21;
@@ -130,7 +131,7 @@ public final class AccountScroll {
         exitImage.maxHeight(height);
         exitImage.maxWidth(width);
 
-        @NotNull final Button exitButton = new Button("", exitImage);
+        @NonNull final Button exitButton = new Button("", exitImage);
 
         exitButton.setOnMouseClicked(event -> {
             runtimeSettings.oauthAccessToken = null;
