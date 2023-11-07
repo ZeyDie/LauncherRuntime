@@ -1,9 +1,12 @@
 package com.zeydie.launcher.scene;
 
 import com.zeydie.launcher.Accounts;
+import com.zeydie.launcher.Reference;
 import com.zeydie.launcher.components.AccountScroll;
 import com.zeydie.launcher.config.AccountsConfig;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.NonNull;
@@ -22,10 +25,16 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public final class FastLoginScene extends AbstractScene {
+    private Pane authPane;
+    private ImageView layoutImage;
     private AccountScroll accountsScroll;
     private Button addAccountButton;
     private Button authButton;
     private Pane newyearPane;
+
+    private Pane twoFAPane;
+    private TextField twoFATextField;
+
     @Setter
     @Getter
     @Nullable
@@ -46,15 +55,21 @@ public final class FastLoginScene extends AbstractScene {
 
     @Override
     protected void doInit() {
+        this.authPane = LookupHelper.lookup(super.layout, "#authPane");
+        this.layoutImage = LookupHelper.lookup(super.layout, "#layoutImage");
+
         this.accountsScroll = new AccountScroll(LookupHelper.lookup(super.layout, "#authPane", "#accountsScrollPane"));
 
         this.addAccountButton = LookupHelper.lookup(super.layout, "#authPane", "#addAccountButton");
         this.authButton = LookupHelper.lookup(super.layout, "#authPane", "#authButton");
 
         this.addAccountButton.setOnAction(event -> switchToLoginning());
-        this.authButton.setOnAction(event -> switchAuth());
+        this.authButton.setOnAction(event -> check2FA());
 
         this.newyearPane = LookupHelper.lookup(super.layout, "#newyearPane");
+
+        this.twoFAPane = LookupHelper.lookup(super.layout, "#twoFAPane");
+        this.twoFATextField = LookupHelper.lookup(super.layout, "#twoFAPane", "#twoFAField");
 
         if (Accounts.getAccountsConfig().getAccounts().isEmpty())
             this.switchToLoginning();
@@ -75,7 +90,43 @@ public final class FastLoginScene extends AbstractScene {
     @Override
     public void reset() {
         this.selectedAccount = null;
+
+        this.authPane.setVisible(true);
+        this.layoutImage.setVisible(true);
+
+        this.twoFAPane.setVisible(false);
+
         this.accountsScroll.updateGrid();
+    }
+
+    public void check2FA() {
+        if (this.selectedAccount == null) return;
+
+        @NonNull final String login = this.selectedAccount.getLogin();
+
+        if (Reference.has2FA(login)) {
+            this.authPane.setVisible(false);
+            this.layoutImage.setVisible(false);
+
+            this.twoFAPane.setVisible(true);
+            this.twoFATextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue.length() == 6) {
+                    try {
+                        if (Reference.isValid2FA(login, newValue)) {
+                            this.authPane.setVisible(true);
+                            this.layoutImage.setVisible(true);
+
+                            this.twoFAPane.setVisible(false);
+
+                            this.switchAuth();
+                        }
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
+                }
+            });
+        } else
+            this.switchAuth();
     }
 
     @SneakyThrows

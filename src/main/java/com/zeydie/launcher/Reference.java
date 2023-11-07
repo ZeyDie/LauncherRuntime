@@ -1,6 +1,7 @@
 package com.zeydie.launcher;
 
 import javafx.scene.image.ImageView;
+import lombok.Cleanup;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +33,10 @@ public final class Reference {
     private static final String uuidUrl = "https://admin.minefite.net/fs/launcher-uuid.php?player=%s";
     @NotNull
     private static final String serverNameUrl = "https://admin.minefite.net/fs/launcher-serverName.php?serverId=%d";
+    @NonNull
+    private static final String twoFACheckUrl = "https://admin.minefite.net/api/Google2FA.php?login=%s&action=activated";
+    @NonNull
+    private static final String twoFAValidationUrl = "https://admin.minefite.net/api/Google2FA.php?login=%s&code=%s";
 
     public static @NotNull ImageView getAvatar(@NonNull final String login) {
         @NonNull final ImageView imageView = new ImageView();
@@ -63,34 +68,17 @@ public final class Reference {
 
     @SneakyThrows
     public static int getServerIdForUUID(@NonNull final UUID uuid) {
-        @NonNull final URL url = new URL(String.format(serverIdUrl, uuid));
-        @NonNull final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        @Cleanup @NonNull final BufferedReader reader = getReaderURL(String.format(serverIdUrl, uuid));
 
-        connection.setRequestMethod("GET");
-
-        try (
-                @NonNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
-                @NonNull final BufferedReader reader = new BufferedReader(inputStreamReader)
-        ) {
-            return Integer.parseInt(reader.readLine());
-        }
+        return Integer.parseInt(reader.readLine());
     }
 
     @SneakyThrows
     public static @NotNull UUID getUUIDForLogin(@NonNull final String login) {
-        @NonNull final URL url = new URL(String.format(uuidUrl, login));
-        @NonNull final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        @Cleanup @NonNull final BufferedReader reader = getReaderURL(String.format(uuidUrl, login));
+        @Nullable final String uuid = reader.readLine();
 
-        connection.setRequestMethod("GET");
-
-        try (
-                @NonNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
-                @NonNull final BufferedReader reader = new BufferedReader(inputStreamReader)
-        ) {
-            @Nullable final String uuid = reader.readLine();
-
-            return (uuid == null || uuid.isEmpty()) ? UUID.randomUUID() : UUID.fromString(uuid);
-        }
+        return (uuid == null || uuid.isEmpty()) ? UUID.randomUUID() : UUID.fromString(uuid);
     }
 
     public static boolean isPlayerServer(final int serverId) {
@@ -108,16 +96,39 @@ public final class Reference {
 
     @SneakyThrows
     public static @NotNull String getServerOfServerId(final int serverId) {
-        @NonNull final URL url = new URL(String.format(serverNameUrl, serverId));
+        @Cleanup @NonNull final BufferedReader reader = getReaderURL(String.format(serverNameUrl, serverId));
+
+        return reader.readLine();
+    }
+
+    @SneakyThrows
+    public static boolean has2FA(@NonNull final String login) {
+        @Cleanup @NonNull final BufferedReader reader = getReaderURL(String.format(twoFACheckUrl, login));
+        @NonNull final String answer = reader.readLine();
+
+        return answer.equalsIgnoreCase("yes");
+    }
+
+    @SneakyThrows
+    public static boolean isValid2FA(
+            @NonNull final String login,
+            @NonNull final String code
+    ) {
+        @Cleanup @NonNull final BufferedReader reader = getReaderURL(String.format(twoFAValidationUrl, login, code));
+        @NonNull final String answer = reader.readLine();
+
+        return answer.equalsIgnoreCase("true");
+    }
+
+    @SneakyThrows
+    private static @NotNull BufferedReader getReaderURL(@NonNull final String site) {
+        @NonNull final URL url = new URL(site);
         @NonNull final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("GET");
 
-        try (
-                @NonNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
-                @NonNull final BufferedReader reader = new BufferedReader(inputStreamReader)
-        ) {
-            return reader.readLine();
-        }
+        @NonNull final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
+
+        return new BufferedReader(inputStreamReader);
     }
 }
