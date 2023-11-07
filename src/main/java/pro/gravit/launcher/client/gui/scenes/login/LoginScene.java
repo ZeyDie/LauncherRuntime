@@ -80,6 +80,7 @@ public class LoginScene extends AbstractScene {
     @Override
     public void doInit() {
         this.authButton = new LoginAuthButtonComponent(LookupHelper.lookup(this.layout, new String[]{"#authButtonBlock"}), this.application, (e) -> this.contextHelper.runCallback(this::loginWithGui));
+
         //TODO ZeyCodeStart
         this.application.runtimeSettings.autoAuth = true;
         //TODO ZeyCodeEnd

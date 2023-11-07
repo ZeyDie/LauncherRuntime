@@ -40,16 +40,8 @@
 }
 
 .serverImage,
-.exitButton,
-#twoFAField {
+.exitButton {
     -fx-background-color: transparent;
-}
-
-#twoFAField {
-    -fx-font-family: "Gilroy-SemiBold";
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 24px;
-    -fx-alignment: CENTER;
 }
 
 #addAccountButton:hover,

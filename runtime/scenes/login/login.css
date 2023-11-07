@@ -1,6 +1,17 @@
 @import "../../styles/global.css";
 @import "../../styles/variables.css";
 
+#twoFAField {
+    -fx-background-color: transparent;
+}
+
+#twoFAField {
+    -fx-font-family: "Gilroy-SemiBold";
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 24px;
+    -fx-alignment: CENTER;
+}
+
 .vline {
     -fx-background-color: transparent;
 }

@@ -1,7 +1,10 @@
 package pro.gravit.launcher.client.gui.scenes.login.methods;
 
+import com.zeydie.launcher.Reference;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.helper.LookupHelper;
@@ -79,6 +82,12 @@ public class LoginAndPasswordAuthMethod extends AbstractAuthMethod<AuthPasswordD
         private LoginScene.LoginSceneAccessor accessor;
         private CompletableFuture<LoginScene.LoginAndPasswordResult> future;
 
+        //TODO ZeyCodeStart
+        private Pane overlayPane;
+        private Pane twoFAPane;
+        private TextField twoFATextField;
+        //TODO ZeyCodeEnd
+
         public LoginAndPasswordOverlay(JavaFXApplication application) {
             super("scenes/login/loginpassword.fxml", application);
         }
@@ -90,12 +99,22 @@ public class LoginAndPasswordAuthMethod extends AbstractAuthMethod<AuthPasswordD
 
         @Override
         protected void doInit() {
+
+            //TODO ZeyCodeStart
+            this.overlayPane = LookupHelper.lookup(super.layout, "#layout");
+            this.twoFAPane = LookupHelper.lookup(super.layout, "#twoFAPane");
+            this.twoFATextField = LookupHelper.lookup(super.layout, "#twoFAPane", "#twoFAField");
+            //TODO ZeyCodeEnd
+
             this.login = LookupHelper.lookup(this.layout, new String[]{"#login"});
             this.password = LookupHelper.lookup(this.layout, new String[]{"#password"});
             this.authButton = new LoginAuthButtonComponent(LookupHelper.lookup(this.layout, new String[]{"#authButtonBlock"}), this.application, (e) -> {
-                String rawLogin = this.login.getText();
+                this.check2FA();
+
+                //TODO ZeyCodeClear
+                /*String rawLogin = this.login.getText();
                 String rawPassword = this.password.getText();
-                this.future.complete(new LoginScene.LoginAndPasswordResult(rawLogin, this.accessor.getAuthService().makePassword(rawPassword)));
+                this.future.complete(new LoginScene.LoginAndPasswordResult(rawLogin, this.accessor.getAuthService().makePassword(rawPassword)));*/
             });
             ((ButtonBase) LookupHelper.lookup(this.layout, new String[]{"#header", "#controls", "#exit"})).setOnAction((e) -> {
                 this.accessor.hideOverlay(0.0, null);
@@ -142,7 +161,38 @@ public class LoginAndPasswordAuthMethod extends AbstractAuthMethod<AuthPasswordD
                 this.password.setPromptText(this.application.getTranslation("runtime.scenes.login.password"));
                 this.password.setText("");
                 this.login.setText("");
+
+                //TODO ZeyCodeStart
+                this.twoFAPane.setVisible(false);
+                //TODO ZeyCodeEnd
             }
         }
+
+        //TODO ZeyCodeStart
+        private void check2FA() {
+            @NonNull final String login = this.login.getText();
+
+            if (Reference.has2FA(login)) {
+                this.overlayPane.setVisible(false);
+                this.twoFAPane.setVisible(true);
+                this.twoFATextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue.length() == 6)
+                        if (Reference.isValid2FA(login, newValue)) {
+                            this.overlayPane.setVisible(true);
+                            this.twoFAPane.setVisible(false);
+
+                            this.auth();
+                        }
+                });
+            } else
+                this.auth();
+        }
+
+        private void auth() {
+            String rawLogin = this.login.getText();
+            String rawPassword = this.password.getText();
+            this.future.complete(new LoginScene.LoginAndPasswordResult(rawLogin, this.accessor.getAuthService().makePassword(rawPassword)));
+        }
+        //TODO ZeyCodeEnd
     }
 }

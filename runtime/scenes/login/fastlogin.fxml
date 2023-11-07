@@ -31,15 +31,6 @@
             <Button id="authButton" layoutX="25.0" layoutY="320.0" mnemonicParsing="false" prefHeight="45"
                     prefWidth="330"/>
         </Pane>
-        <Pane id="twoFAPane" layoutX="50.5" layoutY="87.0" prefHeight="308.0" prefWidth="339.0" visible="false">
-            <!--<ImageView layoutX="-50.5" layoutY="-87" fitHeight="492" fitWidth="440">
-                <Image url="@../../images/background-blur.png" />
-            </ImageView>-->
-            <ImageView>
-                <Image url="@../../images/fastlogin/2fa.png"/>
-            </ImageView>
-            <TextField id="twoFAField" layoutX="74.0" layoutY="213.0" prefHeight="25.0" prefWidth="190.0"/>
-        </Pane>
         <Pane id="header" prefHeight="21.0" prefWidth="440.0">
             <Pane id="controls" prefHeight="0.0" prefWidth="0.0">
                 <Button id="exit" graphicTextGap="0.0" layoutX="410.0" layoutY="5" minHeight="20.0" minWidth="20.0"
