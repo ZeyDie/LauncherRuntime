@@ -1,5 +1,6 @@
 package com.zeydie.launcher;
 
+import com.zeydie.launcher.config.AccountsConfig;
 import javafx.scene.image.ImageView;
 import lombok.Cleanup;
 import lombok.NonNull;
@@ -10,6 +11,7 @@ import pro.gravit.launcher.client.DirBridge;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.SkinManager;
 import pro.gravit.launcher.client.gui.scenes.servermenu.ServerMenuScene;
+import pro.gravit.utils.helper.LogHelper;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -81,17 +83,31 @@ public final class Reference {
         return (uuid == null || uuid.isEmpty()) ? UUID.randomUUID() : UUID.fromString(uuid);
     }
 
-    public static boolean isPlayerServer(final int serverId) {
-        return true;
-        /*@NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
-        @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
+    public static boolean isPlayerServer(final int sortIndex) {
+        final @Nullable AccountsConfig.Account account = getAuthedAccount();
 
-        @NonNull final List<AccountsConfig.Account> accountList = Accounts.getAccountsConfig().getAccounts();
-        @NonNull final Optional<AccountsConfig.Account> filtered = accountList.stream()
-                .filter(account -> account.getOauthAccessToken().equals(runtimeSettings.oauthAccessToken) && account.getOauthRefreshToken().equals(runtimeSettings.oauthRefreshToken))
-                .findAny();
+        if (account == null) return false;
 
-        return filtered.filter(account -> account.getServerId() == serverId || account.getServerId() == -1).isPresent();*/
+        final int serverId = account.getServerId();
+
+        LogHelper.debug("ServerId %d, account %s", serverId, account);
+
+        return serverId == -1 || serverId == sortIndex;
+    }
+
+    public static @Nullable AccountsConfig.Account getAuthedAccount() {
+        @Nullable final String oauthRefreshToken = JavaFXApplication.getInstance().runtimeSettings.oauthRefreshToken;
+
+        LogHelper.debug("OauthRefreshToken %s", oauthRefreshToken);
+
+        if (oauthRefreshToken == null) return null;
+
+        return Accounts.getAccountsConfig()
+                .getAccounts()
+                .stream()
+                .filter(account -> account.getLogin().equals(oauthRefreshToken.split("\\.")[0]))
+                .findFirst()
+                .orElse(null);
     }
 
     @SneakyThrows
