@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.config.RuntimeSettings;
+import pro.gravit.utils.helper.LogHelper;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -55,6 +56,8 @@ public final class AccountScroll {
 
     private @NotNull Button getLoginButton(@NonNull final AccountsConfig.Account account) {
         @NonNull final AccountButton loginButton = new AccountButton(account.getLogin());
+
+        LogHelper.debug("Account button %s %s", loginButton.getText(), loginButton);
 
         loginButton.setOnAction(event -> {
             this.gridPane.getChildren().forEach(node -> {

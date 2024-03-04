@@ -1,12 +1,9 @@
 package com.zeydie.launcher.scene;
 
 import com.zeydie.launcher.Accounts;
-import com.zeydie.launcher.Reference;
 import com.zeydie.launcher.components.AccountScroll;
 import com.zeydie.launcher.config.AccountsConfig;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.NonNull;
@@ -55,14 +52,13 @@ public final class FastLoginScene extends AbstractScene {
         this.addAccountButton = LookupHelper.lookup(super.layout, "#authPane", "#addAccountButton");
         this.authButton = LookupHelper.lookup(super.layout, "#authPane", "#authButton");
 
-        this.addAccountButton.setOnAction(event -> switchToLoginning());
+        this.addAccountButton.setOnAction(event -> switchToLogging());
         this.authButton.setOnAction(event -> switchAuth());
 
         this.newyearPane = LookupHelper.lookup(super.layout, "#newyearPane");
 
-
         if (Accounts.getAccountsConfig().getAccounts().isEmpty())
-            this.switchToLoginning();
+            this.switchToLogging();
 
         this.timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -107,7 +103,7 @@ public final class FastLoginScene extends AbstractScene {
     }
 
     @SneakyThrows
-    public void switchToLoginning() {
+    public void switchToLogging() {
         @NonNull final JavaFXApplication javaFXApplication = JavaFXApplication.getInstance();
         @NonNull final RuntimeSettings runtimeSettings = javaFXApplication.runtimeSettings;
 

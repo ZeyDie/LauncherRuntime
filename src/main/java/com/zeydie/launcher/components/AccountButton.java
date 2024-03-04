@@ -8,10 +8,12 @@ public final class AccountButton extends Button {
     public AccountButton(@NonNull final String text) {
         super(text, Reference.getAvatar(text));
 
-        super.setText(text);
+        super.setMnemonicParsing(false);
+
         super.setMinWidth(330);
         super.setMinHeight(60);
 
+        super.getStyleClass().clear();
         super.getStyleClass().add("accountButton");
     }
 }
