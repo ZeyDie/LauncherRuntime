@@ -72,7 +72,7 @@ dependencies {
     implementation 'pro.gravit.launcher.client:JavaRuntime_lmodule:minefite'
 
     // https://github.com/ZeyDie/Simple-GSON
-    implementation group: 'com.zeydie', name: 'SGson', version: '2.9.x-1.1'
+    implementation group: 'com.zeydie', name: 'SGson', version: '2.10.x-1.2'
 
     // https://mvnrepository.com/artifact/org.jetbrains/annotations
     implementation group: 'org.jetbrains', name: 'annotations', version: '24.0.1'
