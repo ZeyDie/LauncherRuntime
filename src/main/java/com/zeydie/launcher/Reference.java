@@ -22,10 +22,14 @@ import java.util.UUID;
 
 public final class Reference {
     @NotNull
-    public static final Path launcherDirectory = DirBridge.defaultUpdatesDir;
+    public static final Path launcherDirectory = DirBridge.dirUpdates;
+    @NotNull
+    public static final Path defaultLauncherDirectory = DirBridge.defaultUpdatesDir;
 
     @NotNull
     public static final Path accountConfig = launcherDirectory.resolve("accounts.cfg");
+    @NotNull
+    public static final Path defaultAccountConfig = defaultLauncherDirectory.resolve("accounts.cfg");
 
     @NotNull
     public static final String skinUrl = "https://minefite.net/ExtraModules/sac/skins/%s.png";

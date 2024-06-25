@@ -13,7 +13,6 @@ public final class AccountButton extends Button {
         super.setMinWidth(330);
         super.setMinHeight(60);
 
-        super.getStyleClass().clear();
         super.getStyleClass().add("accountButton");
     }
 }
